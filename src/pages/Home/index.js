@@ -1,5 +1,7 @@
+import MainContent from "~/components/Layout/components/MainContent";
+
 function Home() {
-    return <h2>Home page</h2>;
+    return <MainContent />
 }
 
 export default Home;

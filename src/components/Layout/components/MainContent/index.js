@@ -26,7 +26,7 @@ function MainContent() {
         <div className={cx('wrapper')}>
             {/* render các video */}
             {dataUser.map((data) => {
-                console.log(data);
+            
                 return <Content key={data.id} data={data} />;
             })}
         </div>
