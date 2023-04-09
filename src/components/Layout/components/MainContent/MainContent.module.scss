@@ -1,0 +1,141 @@
+// Main content
+.wrapper {
+    margin-right: 24px;
+    width: 692px;
+    max-width: 692px;
+    flex-shrink: 0;
+    padding: 24px 0;
+}
+
+// content
+.container {
+    max-width: 692px;
+    padding: 20px 0;
+    display: flex;
+    position: relative;
+    border-bottom: 1px solid rgba(22, 24, 35, 0.12);
+}
+
+// video content
+
+.video-wrapper {
+    margin-left: 12px;
+}
+
+.des {
+    display: flex;
+    flex-direction: column;
+    margin-right: 114px;
+    word-wrap: break-word;
+}
+
+.des-user {
+    display: flex;
+    align-items: center;
+
+    & > span {
+        font-size: 13px;
+    }
+
+    & p,
+    span {
+        padding-left: 5px;
+    }
+
+    &:hover .name {
+        text-decoration: underline;
+    }
+}
+
+.name {
+    font-size: 16px;
+}
+
+.nickname {
+    font-size: 13px;
+}
+
+.hastag {
+    font-weight: 600;
+}
+
+.descipt,
+.hastag {
+    padding-right: 5px;
+}
+
+.des-music {
+    @extend .des-user;
+
+    & a {
+        padding-left: 5px;
+    }
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.btn {
+    position: absolute;
+    right: -24px;
+    top: 30px;
+}
+
+// avatar
+
+.avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+// icon video
+
+.video {
+    width: 298px;
+    max-width: 298px;
+    display: flex;
+}
+
+.video-moe {
+    max-width: 298px;
+    // height: 100%;
+    border-radius: 10px;
+}
+
+.list-icon {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    margin-left: 12px;
+}
+.btn-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.icon-con {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: rgb(236, 236, 236);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon {
+    width: 45%;
+    height: 45%;
+}
+
+.quantity {
+    color: rgba(22, 24, 35, 0.75);
+    font-size: 12px;
+}
+.mguu {
+}
