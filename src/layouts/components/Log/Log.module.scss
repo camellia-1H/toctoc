@@ -15,7 +15,8 @@
 
 .log-list {
     padding: 10px 30px;
-    max-height: 180px;
+    margin-bottom: 30px;
+    max-height: 200px;
     overflow-y: auto;
 }
 
@@ -31,16 +32,20 @@
 }
 .header {
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 .modal-footer {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding-top: 10px;
-    margin-top: 10px;
+    background-color: white;
+    padding: 5px 0;
     border-top: 1px solid rgb(224, 223, 223);
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
 }
 
 .log {

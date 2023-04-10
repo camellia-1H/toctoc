@@ -26,7 +26,6 @@ const customStyles = {
 };
 
 function Log({ modalIsOpen, handleClose }) {
-    console.log('ngu');
     return (
         <ReactModal isOpen={modalIsOpen} style={customStyles}>
             <div className={cx('container')}>

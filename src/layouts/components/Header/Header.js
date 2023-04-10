@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import classNames from 'classnames/bind';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleQuestion, faCoins, faEarthAsia, faEllipsisVertical, faGear, faKeyboard, faSignOut, faUser } from '@fortawesome/free-solid-svg-icons';
@@ -15,13 +15,6 @@ import { InboxIcon, MessageIcon, MoreIcon, UploadIcon } from '~/components/Icons
 import Image from '~/components/Image';
 import Search from '../Search';
 import Log from '../Log/Log';
-
-import ReactModal from 'react-modal';
-
-import { CloseModalIcon } from '~/components/Icons';
-import HeaderLog from '../Log/HeaderLog';
-import FooterLog from '../Log/FooterLog';
-import { FbLogIcon, GGLogIcon, UserLogIcon } from '~/components/Icons';
 
 const cx = classNames.bind(styles);
 
@@ -55,20 +48,7 @@ const MENU_ITEMS = [
         title: 'Keyboard shortcuts',
     },
 ];
-const customStyles = {
-    content: {
-        minWidth: '500px',
-        maxHeight: 'min((100vh - 96px) - 40px, 734px)',
-        top: '40%',
-        left: '50%',
-        right: 'auto',
-        bottom: 'auto',
-        marginRight: '-50%',
-        transform: 'translate(-50%, -50%)',
-        borderRadius: '15px',
-        overFlowY: 'hidden',
-    },
-};
+
 function Header() {
     const currentUser = false;
 
@@ -109,7 +89,7 @@ function Header() {
 
     const [modalIsOpen, setIsOpen] = useState(false);
 
-    const handleClose = () => setIsOpen(false);
+    const handleClose = useCallback(() => setIsOpen(false), []);
     const handleShow = () => setIsOpen(true);
 
     // <Log modalIsOpen={modalIsOpen} handleClose={handleClose} />;
@@ -170,33 +150,7 @@ function Header() {
                     </Menu>
                 </div>
             </div>
-            <ReactModal isOpen={modalIsOpen} style={customStyles}>
-                <div className={cx('container')}>
-                    <Button className={cx('modal-close')} onClick={handleClose}>
-                        <CloseModalIcon />
-                    </Button>
-
-                    <HeaderLog />
-                    <div className={cx('log-list')}>
-                        <div className={cx('log-item')}>
-                            <Button leftIcon={<FbLogIcon />}>
-                                <span className={cx('log-title')}>Tiếp tục với Facebook</span>
-                            </Button>
-                        </div>
-                        <div className={cx('log-item')}>
-                            <Button leftIcon={<UserLogIcon />}>
-                                <span className={cx('log-title')}>Tiếp tục với số điện thoại hoặc Email</span>
-                            </Button>
-                        </div>
-                        <div className={cx('log-item')}>
-                            <Button leftIcon={<GGLogIcon />}>
-                                <span className={cx('log-title')}>Tiếp tục với Google</span>
-                            </Button>
-                        </div>
-                    </div>
-                    <FooterLog />
-                </div>
-            </ReactModal>
+            <Log modalIsOpen={modalIsOpen} handleClose={handleClose} />
         </header>
     );
 }
