@@ -1,15 +1,7 @@
+import { useState } from 'react';
 import classNames from 'classnames/bind';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-    faCircleQuestion,
-    faCoins,
-    faEarthAsia,
-    faEllipsisVertical,
-    faGear,
-    faKeyboard,
-    faSignOut,
-    faUser,
-} from '@fortawesome/free-solid-svg-icons';
+import { faCircleQuestion, faCoins, faEarthAsia, faEllipsisVertical, faGear, faKeyboard, faSignOut, faUser } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
@@ -19,9 +11,17 @@ import Button from '~/components/Button';
 import styles from './Header.module.scss';
 import images from '~/assets/images';
 import Menu from '~/components/Popper/Menu';
-import { InboxIcon, MessageIcon, UploadIcon } from '~/components/Icons';
+import { InboxIcon, MessageIcon, MoreIcon, UploadIcon } from '~/components/Icons';
 import Image from '~/components/Image';
 import Search from '../Search';
+import Log from '../Log/Log';
+
+import ReactModal from 'react-modal';
+
+import { CloseModalIcon } from '~/components/Icons';
+import HeaderLog from '../Log/HeaderLog';
+import FooterLog from '../Log/FooterLog';
+import { FbLogIcon, GGLogIcon, UserLogIcon } from '~/components/Icons';
 
 const cx = classNames.bind(styles);
 
@@ -55,9 +55,22 @@ const MENU_ITEMS = [
         title: 'Keyboard shortcuts',
     },
 ];
-
+const customStyles = {
+    content: {
+        minWidth: '500px',
+        maxHeight: 'min((100vh - 96px) - 40px, 734px)',
+        top: '40%',
+        left: '50%',
+        right: 'auto',
+        bottom: 'auto',
+        marginRight: '-50%',
+        transform: 'translate(-50%, -50%)',
+        borderRadius: '15px',
+        overFlowY: 'hidden',
+    },
+};
 function Header() {
-    const currentUser = true;
+    const currentUser = false;
 
     // Handle logic
     const handleMenuChange = (menuItem) => {
@@ -94,6 +107,12 @@ function Header() {
         },
     ];
 
+    const [modalIsOpen, setIsOpen] = useState(false);
+
+    const handleClose = () => setIsOpen(false);
+    const handleShow = () => setIsOpen(true);
+
+    // <Log modalIsOpen={modalIsOpen} handleClose={handleClose} />;
     return (
         <header className={cx('wrapper')}>
             <div className={cx('inner')}>
@@ -125,7 +144,13 @@ function Header() {
                         </>
                     ) : (
                         <>
-                            <Button text>Upload</Button>
+                            <Button
+                                text
+                                leftIcon={<MoreIcon />}
+                                // to={'/signin'}
+                                onClick={handleShow}>
+                                Upload
+                            </Button>
                             <Button primary>Log in</Button>
                         </>
                     )}
@@ -134,7 +159,7 @@ function Header() {
                         {currentUser ? (
                             <Image
                                 className={cx('user-avatar')}
-                                src="https://files.fullstack.edu.vn/f8-prod/user_avatars/1/623d4b2d95cec.png"
+                                src="https://scontent.fhan15-1.fna.fbcdn.net/v/t39.30808-6/323441730_967739090854048_936390828444513617_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=wghZizgvQaEAX8SzEZ1&_nc_ht=scontent.fhan15-1.fna&oh=00_AfChDKMH_8YEwxKsiiPFqqxxK3R6oIvYfnqUSV9nrerBPQ&oe=643921B8"
                                 alt="Nguyen Van A"
                             />
                         ) : (
@@ -145,6 +170,33 @@ function Header() {
                     </Menu>
                 </div>
             </div>
+            <ReactModal isOpen={modalIsOpen} style={customStyles}>
+                <div className={cx('container')}>
+                    <Button className={cx('modal-close')} onClick={handleClose}>
+                        <CloseModalIcon />
+                    </Button>
+
+                    <HeaderLog />
+                    <div className={cx('log-list')}>
+                        <div className={cx('log-item')}>
+                            <Button leftIcon={<FbLogIcon />}>
+                                <span className={cx('log-title')}>Tiếp tục với Facebook</span>
+                            </Button>
+                        </div>
+                        <div className={cx('log-item')}>
+                            <Button leftIcon={<UserLogIcon />}>
+                                <span className={cx('log-title')}>Tiếp tục với số điện thoại hoặc Email</span>
+                            </Button>
+                        </div>
+                        <div className={cx('log-item')}>
+                            <Button leftIcon={<GGLogIcon />}>
+                                <span className={cx('log-title')}>Tiếp tục với Google</span>
+                            </Button>
+                        </div>
+                    </div>
+                    <FooterLog />
+                </div>
+            </ReactModal>
         </header>
     );
 }
