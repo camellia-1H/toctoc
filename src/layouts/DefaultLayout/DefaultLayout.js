@@ -1,26 +1,29 @@
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
+
 import Header from '~/layouts/components/Header';
 import Sidebar from '~/layouts/components/Sidebar';
 import styles from './DefaultLayout.module.scss';
-import { useState } from 'react';
-import { AuthContextProvider } from '~/components/AuthContext/AuthContext';
+import { UserAuth } from '~/components/AuthContext/AuthContext';
 
 const cx = classNames.bind(styles);
 
 function DefaultLayout({ children }) {
-    // const [userIsLogin, setUserLogin] = useState(false);
-    const userIsLogin = false;
+    const { user, logOut } = UserAuth();
+    let userIsLogin = false;
+    if (user.length > 0 && user[user.length - 1] != null) {
+        userIsLogin = true;
+    }
+
     return (
-        // <AuthContextProvider>
         <div className={cx('wrapper')}>
-            <Header userIsLogin={userIsLogin} />
+            <Header userIsLogin={userIsLogin} data={user} logOut={logOut} />
             <div className={cx('container')}>
                 <Sidebar userIsLogin={userIsLogin} />
                 <div className={cx('content')}>{children}</div>
             </div>
         </div>
-        // </AuthContextProvider>
     );
 }
 

@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleQuestion, faCoins, faEarthAsia, faEllipsisVertical, faGear, faKeyboard, faSignOut, faUser } from '@fortawesome/free-solid-svg-icons';
@@ -15,6 +15,7 @@ import { InboxIcon, MessageIcon, MoreIcon, UploadIcon } from '~/components/Icons
 import Image from '~/components/Image';
 import Search from '../Search';
 import Log from '../Log/Log';
+import { UserAuth } from '~/components/AuthContext/AuthContext';
 
 const cx = classNames.bind(styles);
 
@@ -49,7 +50,34 @@ const MENU_ITEMS = [
     },
 ];
 
-function Header({ userIsLogin }) {
+const userMenu = [
+    {
+        icon: <FontAwesomeIcon icon={faUser} />,
+        title: 'View profile',
+        to: '/@hoaa',
+    },
+    {
+        icon: <FontAwesomeIcon icon={faCoins} />,
+        title: 'Get coins',
+        to: '/coin',
+    },
+    {
+        icon: <FontAwesomeIcon icon={faGear} />,
+        title: 'Settings',
+        to: '/settings',
+    },
+    ...MENU_ITEMS,
+    {
+        icon: <FontAwesomeIcon icon={faSignOut} />,
+        title: 'Log out',
+        to: '/logout',
+        separate: true,
+    },
+];
+
+function Header({ userIsLogin, data, logOut }) {
+    console.log(userIsLogin);
+    console.log(data);
     // Handle logic
     const handleMenuChange = (menuItem) => {
         switch (menuItem.type) {
@@ -60,39 +88,22 @@ function Header({ userIsLogin }) {
         }
     };
 
-    const userMenu = [
-        {
-            icon: <FontAwesomeIcon icon={faUser} />,
-            title: 'View profile',
-            to: '/@hoaa',
-        },
-        {
-            icon: <FontAwesomeIcon icon={faCoins} />,
-            title: 'Get coins',
-            to: '/coin',
-        },
-        {
-            icon: <FontAwesomeIcon icon={faGear} />,
-            title: 'Settings',
-            to: '/settings',
-        },
-        ...MENU_ITEMS,
-        {
-            icon: <FontAwesomeIcon icon={faSignOut} />,
-            title: 'Log out',
-            to: '/logout',
-            separate: true,
-        },
-    ];
-
     const [modalIsOpen, setIsOpen] = useState(false);
 
     const handleClose = useCallback(() => setIsOpen(false), []);
     const handleShowModal = () => setIsOpen(true);
+    useEffect(() => {
+        setIsOpen(false);
+    }, [userIsLogin]);
+    // const { user, logOut } = UserAuth();
+    // console.log(user[user.length - 1]);
 
-    // <Log modalIsOpen={modalIsOpen} handleClose={handleClose} />;
+    const handleLogOut = async () => {
+        await logOut();
+    };
     return (
         <header className={cx('wrapper')}>
+            {true ? <button onClick={handleLogOut}>Log out</button> : <p>nguu</p>}
             <div className={cx('inner')}>
                 <Link to={config.routes.home} className={cx('logo-link')}>
                     <img src={images.logo} alt="Tiktok" />
