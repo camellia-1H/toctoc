@@ -49,9 +49,7 @@ const MENU_ITEMS = [
     },
 ];
 
-function Header() {
-    const currentUser = false;
-
+function Header({ userIsLogin }) {
     // Handle logic
     const handleMenuChange = (menuItem) => {
         switch (menuItem.type) {
@@ -90,7 +88,7 @@ function Header() {
     const [modalIsOpen, setIsOpen] = useState(false);
 
     const handleClose = useCallback(() => setIsOpen(false), []);
-    const handleShow = () => setIsOpen(true);
+    const handleShowModal = () => setIsOpen(true);
 
     // <Log modalIsOpen={modalIsOpen} handleClose={handleClose} />;
     return (
@@ -103,12 +101,16 @@ function Header() {
                 <Search />
 
                 <div className={cx('actions')}>
-                    {currentUser ? (
+                    {userIsLogin ? (
                         <>
                             <Tippy delay={[0, 50]} content="Upload video" placement="bottom">
-                                <button className={cx('action-btn')}>
-                                    <UploadIcon />
-                                </button>
+                                <Button
+                                    text
+                                    leftIcon={<MoreIcon />}
+                                    // to={'/signin'}
+                                >
+                                    Upload
+                                </Button>
                             </Tippy>
                             <Tippy delay={[0, 50]} content="Message" placement="bottom">
                                 <button className={cx('action-btn')}>
@@ -128,15 +130,17 @@ function Header() {
                                 text
                                 leftIcon={<MoreIcon />}
                                 // to={'/signin'}
-                                onClick={handleShow}>
+                                onClick={handleShowModal}>
                                 Upload
                             </Button>
-                            <Button primary>Log in</Button>
+                            <Button onClick={handleShowModal} primary>
+                                Log in
+                            </Button>
                         </>
                     )}
 
-                    <Menu items={currentUser ? userMenu : MENU_ITEMS} onChange={handleMenuChange}>
-                        {currentUser ? (
+                    <Menu items={userIsLogin ? userMenu : MENU_ITEMS} onChange={handleMenuChange}>
+                        {userIsLogin ? (
                             <Image
                                 className={cx('user-avatar')}
                                 src="https://scontent.fhan15-1.fna.fbcdn.net/v/t39.30808-6/323441730_967739090854048_936390828444513617_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=wghZizgvQaEAX8SzEZ1&_nc_ht=scontent.fhan15-1.fna&oh=00_AfChDKMH_8YEwxKsiiPFqqxxK3R6oIvYfnqUSV9nrerBPQ&oe=643921B8"
