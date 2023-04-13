@@ -1,5 +1,6 @@
+import AccountProfile from '~/layouts/components/AccountProfile/AccountProfile';
 function Profile() {
-    return <h2>Profile page</h2>;
+    return <AccountProfile />;
 }
 
 export default Profile;

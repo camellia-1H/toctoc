@@ -1,8 +1,7 @@
-import { useCallback, useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleQuestion, faCoins, faEarthAsia, faEllipsisVertical, faGear, faKeyboard, faSignOut, faUser } from '@fortawesome/free-solid-svg-icons';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
 
@@ -11,12 +10,10 @@ import Button from '~/components/Button';
 import styles from './Header.module.scss';
 import images from '~/assets/images';
 import Menu from '~/components/Popper/Menu';
-import { InboxIcon, MessageIcon, MoreIcon, UploadIcon } from '~/components/Icons';
+import { InboxIcon, MessageIcon, MoreIcon } from '~/components/Icons';
 import Image from '~/components/Image';
 import Search from '../Search';
-import Log from '../Log/Log';
 import { UserAuth } from '~/components/AuthContext/AuthContext';
-
 const cx = classNames.bind(styles);
 
 const MENU_ITEMS = [
@@ -50,34 +47,10 @@ const MENU_ITEMS = [
     },
 ];
 
-const userMenu = [
-    {
-        icon: <FontAwesomeIcon icon={faUser} />,
-        title: 'View profile',
-        to: '/@hoaa',
-    },
-    {
-        icon: <FontAwesomeIcon icon={faCoins} />,
-        title: 'Get coins',
-        to: '/coin',
-    },
-    {
-        icon: <FontAwesomeIcon icon={faGear} />,
-        title: 'Settings',
-        to: '/settings',
-    },
-    ...MENU_ITEMS,
-    {
-        icon: <FontAwesomeIcon icon={faSignOut} />,
-        title: 'Log out',
-        to: '/logout',
-        separate: true,
-    },
-];
-
-function Header({ userIsLogin, data, logOut }) {
+function Header({ userIsLogin, handleShowModal }) {
     console.log(userIsLogin);
-    console.log(data);
+
+    const { logOut } = UserAuth();
     // Handle logic
     const handleMenuChange = (menuItem) => {
         switch (menuItem.type) {
@@ -88,22 +61,41 @@ function Header({ userIsLogin, data, logOut }) {
         }
     };
 
-    const [modalIsOpen, setIsOpen] = useState(false);
-
-    const handleClose = useCallback(() => setIsOpen(false), []);
-    const handleShowModal = () => setIsOpen(true);
-    useEffect(() => {
-        setIsOpen(false);
-    }, [userIsLogin]);
-    // const { user, logOut } = UserAuth();
-    // console.log(user[user.length - 1]);
-
     const handleLogOut = async () => {
         await logOut();
     };
+    // <Link to={`/@${data.nickname}`} className={cx('wrapper')}>
+
+    //    profile: '/@:nickname',
+    const userMenu = [
+        {
+            icon: <FontAwesomeIcon icon={faUser} />,
+            title: 'View profile',
+            // to: `/@${user.email}`,
+            to: config.routes.profile,
+            // to: '/@manh',
+        },
+        {
+            icon: <FontAwesomeIcon icon={faCoins} />,
+            title: 'Get coins',
+            to: '/coin',
+        },
+        {
+            icon: <FontAwesomeIcon icon={faGear} />,
+            title: 'Settings',
+            to: '/settings',
+        },
+        ...MENU_ITEMS,
+        {
+            icon: <FontAwesomeIcon icon={faSignOut} />,
+            title: 'Log out',
+            separate: true,
+            onClickLogOut: handleLogOut,
+        },
+    ];
+
     return (
         <header className={cx('wrapper')}>
-            {true ? <button onClick={handleLogOut}>Log out</button> : <p>nguu</p>}
             <div className={cx('inner')}>
                 <Link to={config.routes.home} className={cx('logo-link')}>
                     <img src={images.logo} alt="Tiktok" />
@@ -119,7 +111,7 @@ function Header({ userIsLogin, data, logOut }) {
                                     text
                                     leftIcon={<MoreIcon />}
                                     // to={'/signin'}
-                                >
+                                    to={config.routes.profile}>
                                     Upload
                                 </Button>
                             </Tippy>
@@ -165,7 +157,6 @@ function Header({ userIsLogin, data, logOut }) {
                     </Menu>
                 </div>
             </div>
-            <Log modalIsOpen={modalIsOpen} handleClose={handleClose} />
         </header>
     );
 }

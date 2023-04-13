@@ -1,0 +1,81 @@
+.d-flex {
+    display: flex;
+    // justify-content: space-between;
+    align-items: center;
+}
+
+.wrapper {
+}
+
+.user-page {
+    padding: 24px 20px;
+}
+
+.user-header {
+    @extend .d-flex;
+}
+
+.nickname {
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.avatar {
+    width: 116px;
+    height: 116px;
+    @extend .mr;
+}
+
+.avatar-img {
+    width: 100%;
+    border-radius: 50%;
+}
+
+.info {
+    @extend .d-flex;
+    margin-top: 25px;
+}
+
+.mr {
+    margin-right: 20px;
+    // @extend .d-flex;
+}
+
+.des {
+    font: {
+        size: 16px;
+        weight: 500;
+    }
+    color: rgb(124, 124, 124);
+}
+
+.user-layout {
+    position: relative;
+}
+
+.tag-contain {
+    @extend .d-flex;
+}
+
+.tag {
+    @extend .d-flex;
+    justify-content: center;
+    width: 230px;
+    height: 40px;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.tag2:hover + .w230 {
+    transform: translateX(230px);
+}
+
+.w230 {
+    position: absolute;
+    top: 43px;
+    height: 2px;
+    width: 230px;
+    background-color: black;
+    // transform: translateX(230px);
+    transition: transform 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
+}

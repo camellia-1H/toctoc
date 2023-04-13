@@ -1,28 +1,46 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 
 import Header from '~/layouts/components/Header';
 import Sidebar from '~/layouts/components/Sidebar';
 import styles from './DefaultLayout.module.scss';
+import Log from '../components/Log/Log';
 import { UserAuth } from '~/components/AuthContext/AuthContext';
+import MainContent from '~/components/Layout/components/MainContent';
 
 const cx = classNames.bind(styles);
 
 function DefaultLayout({ children }) {
-    const { user, logOut } = UserAuth();
+    const { user } = UserAuth();
+
     let userIsLogin = false;
-    if (user.length > 0 && user[user.length - 1] != null) {
+    console.log(userIsLogin);
+
+    if (user) {
         userIsLogin = true;
     }
 
+    console.log(userIsLogin);
+
+    const [modalIsOpen, setIsOpen] = useState(false);
+
+    const handleCloseModal = () => setIsOpen(false);
+    const handleShowModal = () => setIsOpen(true);
+
+    useEffect(() => {
+        setIsOpen(false);
+    }, [userIsLogin]);
+
     return (
         <div className={cx('wrapper')}>
-            <Header userIsLogin={userIsLogin} data={user} logOut={logOut} />
+            <Header userIsLogin={userIsLogin} handleShowModal={handleShowModal} />
             <div className={cx('container')}>
-                <Sidebar userIsLogin={userIsLogin} />
+                <Sidebar userIsLogin={userIsLogin} handleShowModal={handleShowModal} />
+                {!userIsLogin && <MainContent />}
                 <div className={cx('content')}>{children}</div>
             </div>
+            {!userIsLogin && <Log modalIsOpen={modalIsOpen} handleCloseModal={handleCloseModal} />}
         </div>
     );
 }

@@ -1,8 +1,8 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { publicRoutes } from '~/routes';
 import DefaultLayout from '~/layouts';
-import { AuthContextProvider } from './components/AuthContext/AuthContext';
 import React from 'react';
+import ProtectedRoute from './components/AuthContext/ProtectedRoute';
 
 function App() {
     return (
@@ -25,7 +25,9 @@ function App() {
                                 path={route.path}
                                 element={
                                     <Layout>
-                                        <Page />
+                                        <ProtectedRoute>
+                                            <Page />
+                                        </ProtectedRoute>
                                     </Layout>
                                 }
                             />

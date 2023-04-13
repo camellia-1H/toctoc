@@ -2,7 +2,7 @@ import * as httpRequest from '~/utils/httpRequest';
 
 export const search = async (keywords) => {
     try {
-        const res = await httpRequest.get('user/search', {
+        const res = await httpRequest.get('user/discover', {
             params: {
                 keywords,
             },

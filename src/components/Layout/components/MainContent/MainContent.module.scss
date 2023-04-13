@@ -1,6 +1,7 @@
 // Main content
 .wrapper {
     margin-right: 24px;
+    margin-left: 28px;
     width: 692px;
     max-width: 692px;
     flex-shrink: 0;
@@ -10,7 +11,7 @@
 // content
 .container {
     max-width: 692px;
-    padding: 20px 0;
+    padding: 10px 0 20px;
     display: flex;
     position: relative;
     border-bottom: 1px solid rgba(22, 24, 35, 0.12);
@@ -78,7 +79,7 @@
 
 .btn {
     position: absolute;
-    right: -24px;
+    right: -35px;
     top: 30px;
 }
 

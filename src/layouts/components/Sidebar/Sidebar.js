@@ -8,7 +8,7 @@ import Button from '~/components/Button/Button';
 
 const cx = classNames.bind(styles);
 
-function Sidebar({ userIsLogin }) {
+function Sidebar({ userIsLogin, handleShowModal }) {
     return (
         <aside className={cx('wrapper')}>
             <Menu>
@@ -22,7 +22,13 @@ function Sidebar({ userIsLogin }) {
                     <SuggestedAccounts label="Following accounts" />
                 </>
             ) : (
-                <Button large>Login</Button>
+                <>
+                    <p className={cx('des')}>Log in to follow creators, like videos, and view comments.</p>
+                    <Button outline large onClick={handleShowModal}>
+                        Login
+                    </Button>
+                    <SuggestedAccounts label="Suggested accounts" />
+                </>
             )}
         </aside>
     );

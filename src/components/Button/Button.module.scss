@@ -47,6 +47,7 @@
 }
 
 .primary {
+    padding: 11px 16px;
     color: var(--white);
     background-color: var(--primary);
     border-color: var(--primary);
@@ -81,6 +82,7 @@
 }
 
 .large {
-    padding: 14px 16px;
+    width: 100%;
+    padding: 16px 100px;
     min-width: 140px;
 }
