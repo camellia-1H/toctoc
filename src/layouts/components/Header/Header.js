@@ -5,7 +5,7 @@ import { Link, useParams } from 'react-router-dom';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
 
-import config from '~/config';
+import { config } from '~/config';
 import Button from '~/components/Button';
 import styles from './Header.module.scss';
 import images from '~/assets/images';
@@ -49,8 +49,11 @@ const MENU_ITEMS = [
 
 function Header({ userIsLogin, handleShowModal }) {
     console.log(userIsLogin);
+    // const params = useParams();
+    // const nickname = params.email;
 
-    const { logOut } = UserAuth();
+    const { user, logOut } = UserAuth();
+    console.log(user);
     // Handle logic
     const handleMenuChange = (menuItem) => {
         switch (menuItem.type) {
@@ -73,6 +76,7 @@ function Header({ userIsLogin, handleShowModal }) {
             title: 'View profile',
             // to: `/@${user.email}`,
             to: config.routes.profile,
+            // to: config.routes.profileLink(nickname),
             // to: '/@manh',
         },
         {
@@ -111,7 +115,7 @@ function Header({ userIsLogin, handleShowModal }) {
                                     text
                                     leftIcon={<MoreIcon />}
                                     // to={'/signin'}
-                                    to={config.routes.profile}>
+                                    to={config.routes.upload}>
                                     Upload
                                 </Button>
                             </Tippy>
@@ -146,8 +150,9 @@ function Header({ userIsLogin, handleShowModal }) {
                         {userIsLogin ? (
                             <Image
                                 className={cx('user-avatar')}
-                                src="https://scontent.fhan15-1.fna.fbcdn.net/v/t39.30808-6/323441730_967739090854048_936390828444513617_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=wghZizgvQaEAX8SzEZ1&_nc_ht=scontent.fhan15-1.fna&oh=00_AfChDKMH_8YEwxKsiiPFqqxxK3R6oIvYfnqUSV9nrerBPQ&oe=643921B8"
-                                alt="Nguyen Van A"
+                                // src="https://scontent.fhan15-1.fna.fbcdn.net/v/t39.30808-6/323441730_967739090854048_936390828444513617_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=wghZizgvQaEAX8SzEZ1&_nc_ht=scontent.fhan15-1.fna&oh=00_AfChDKMH_8YEwxKsiiPFqqxxK3R6oIvYfnqUSV9nrerBPQ&oe=643921B8"
+                                src={user?.photoURL}
+                                alt="Dao Manh"
                             />
                         ) : (
                             <button className={cx('more-btn')}>

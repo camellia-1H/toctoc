@@ -8,7 +8,7 @@ import { faCircleXmark, faMagnifyingGlass, faSpinner } from '@fortawesome/free-s
 import { Wrapper as PopperWrapper } from '~/components/Popper';
 import AccountItem from '~/components/Search/AccountItem';
 import { useDeboubce } from '~/hooks';
-import * as searchServices from '~/apiServices/searchService';
+import * as searchServices from '~/services/searchService';
 
 const cx = classNames.bind(styles);
 
@@ -74,8 +74,7 @@ function Search() {
                         </PopperWrapper>
                     </div>
                 )}
-                onClickOutside={handleHideSearchResult}
-            >
+                onClickOutside={handleHideSearchResult}>
                 <div className={cx('search')}>
                     <input
                         ref={inputRef}

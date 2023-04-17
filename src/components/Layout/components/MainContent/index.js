@@ -3,28 +3,26 @@ import { useEffect, useState } from 'react';
 
 import Content from './Content';
 import styles from './MainContent.module.scss';
+import * as videoPopularService from '~/services/videoPopularService';
 
 const cx = classNames.bind(styles);
 
 function MainContent() {
-    // lấy dữ liệu user và truyền qua prop data
-    // state [data]
-    const [dataUser, setDataUser] = useState([]);
+    const [videoList, setVideoList] = useState([]);
     useEffect(() => {
-        fetch('https://api.themoviedb.org/3/movie/popular?api_key=572905640dcafac9058f6de342985608&language=en-US&page=1')
-            .then((response) => response.json())
-            .then((data) => {
-                const results = data.results;
-                setDataUser(results);
-                // console.log(dataUser);
-            });
+        const fetchApi = async () => {
+            const result = await videoPopularService.getVideoPopular();
+            setVideoList(result);
+        };
+        fetchApi();
+        console.log(videoList);
     }, []);
 
     return (
         <div className={cx('wrapper')}>
             {/* render các video */}
-            {dataUser.map((data) => {
-                return <Content key={data.id} data={data} />;
+            {videoList?.map((data) => {
+                return <Content key={data.aweme_id} data={data} />;
             })}
         </div>
     );

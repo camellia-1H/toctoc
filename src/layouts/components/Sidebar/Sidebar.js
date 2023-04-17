@@ -3,7 +3,7 @@ import styles from './Sidebar.module.scss';
 import Menu, { MenuItem } from './Menu';
 import { HomeIcon, HomeActiveIcon, UserGroupIcon, UserGroupActiveIcon, LiveIcon, LiveActiveIcon } from '~/components/Icons';
 import SuggestedAccounts from '~/components/SuggestedAccounts';
-import config from '~/config';
+import { config } from '~/config';
 import Button from '~/components/Button/Button';
 
 const cx = classNames.bind(styles);

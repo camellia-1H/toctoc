@@ -1,12 +1,79 @@
+import { useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
 import styles from './AccountProfile.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
+import { updateDoc, doc, onSnapshot, getDoc, arrayUnion } from 'firebase/firestore';
+import { db } from '~/components/AuthContext/firebase';
+
 import Button from '~/components/Button/Button';
+import * as videoService from '~/services/videoService';
+import { UserAuth } from '~/components/AuthContext/AuthContext';
+import VideoItem from '~/components/VideoItem/VideoItem';
 
 const cx = classNames.bind(styles);
 
 function AccountProfile() {
+    const { user } = UserAuth();
+    console.log(user);
+
+    const [videoList, setVideoList] = useState([]);
+
+    // useEffect(() => {
+    //     const fetchApi = async () => {
+    //         const result = await videoService.getVideo();
+
+    //         setVideoList(result);
+    //     };
+    //     fetchApi();
+    //     console.log(videoList);
+    // }, []);
+
+    const [saved, setSaved] = useState(false);
+    const videoId = doc(db, 'user_video', `${user?.email}`);
+
+    const upload = async () => {
+        if (user?.email) {
+            setSaved(true);
+            await updateDoc(videoId, {
+                video: arrayUnion({
+                    video_id: '2',
+                    play: 'https://yt3.ggpht.com/VWBZ360UFEUxVD-Udx81wsl2QpcMwWIievwhz34vRdACTr7S_tVkflfCzV2tOoOo_Fy95URJmQ=s88-c-k-c0x00ffffff-no-rj',
+                    cover: 'https://yt3.ggpht.com/VWBZ360UFEUxVD-Udx81wsl2QpcMwWIievwhz34vRdACTr7S_tVkflfCzV2tOoOo_Fy95URJmQ=s88-c-k-c0x00ffffff-no-rj',
+                    play_count: 200,
+                    des: 'nguu2',
+                    isPrivate: false,
+                    isPublic: true,
+                }),
+            });
+        } else {
+            alert('dang nhap di da');
+        }
+    };
+
+    const update = async () => {
+        if (user?.email) {
+            await updateDoc(videoId, {
+                'video.play_count': 200,
+            });
+        }
+    };
+
+    const deleteShow = async (passId) => {
+        try {
+            const result = videoList.filter((item) => item.video_id != passId);
+            await updateDoc(videoId, {
+                video: result,
+            });
+        } catch (e) {}
+    };
+
+    useEffect(() => {
+        onSnapshot(doc(db, 'user_video', `${user?.email}`), (doc) => {
+            setVideoList(doc.data()?.video);
+        });
+    }, [user?.email]);
+
     return (
         <div className={cx('wrapper')}>
             <div className={cx('user-page')}>
@@ -38,6 +105,11 @@ function AccountProfile() {
                 </h3>
                 <h3 className={cx('nickname')}>No bio yet.</h3>
 
+                <button onClick={upload}>Click test</button>
+                <p>
+                    <button onClick={update}>update</button>
+                </p>
+
                 <div className={cx('user-layout')}>
                     <div className={cx('tag-contain')}>
                         <p className={cx('tag', 'tag1')}>Videos</p>
@@ -45,7 +117,11 @@ function AccountProfile() {
                         <div className={cx('w230')}></div>
                     </div>
                     <div className={cx('video-contain')}>
-                        <div className={cx('video-item')}></div>
+                        <div className={cx('video-list')}>
+                            {videoList?.map((video) => (
+                                <VideoItem key={video.video_id} video={video} deleteShow={deleteShow} />
+                            ))}
+                        </div>
                     </div>
                 </div>
             </div>

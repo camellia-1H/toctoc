@@ -79,3 +79,13 @@
     // transform: translateX(230px);
     transition: transform 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
 }
+
+//
+.video-contain {
+    margin-top: 15px;
+}
+
+.video-list {
+    display: flex;
+    flex-wrap: wrap;
+}

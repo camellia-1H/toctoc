@@ -9,6 +9,7 @@ import { FbLogIcon, GGLogIcon, UserLogIcon } from '~/components/Icons';
 import Button from '~/components/Button/Button';
 
 import { UserAuth } from '~/components/AuthContext/AuthContext';
+import { config } from '~/config';
 
 const cx = classNames.bind(styles);
 
@@ -34,9 +35,15 @@ const customStyles = {
 // });
 
 function Log({ modalIsOpen, handleCloseModal }) {
-    const { googleSignIn } = UserAuth();
+    const { googleSignIn, facebookSignIn } = UserAuth();
 
-    const handleSignIn = async () => {
+    const handleSignInFb = async () => {
+        try {
+            await facebookSignIn();
+        } catch (error) {}
+    };
+
+    const handleSignInGG = async () => {
         try {
             await googleSignIn();
         } catch (error) {}
@@ -52,17 +59,17 @@ function Log({ modalIsOpen, handleCloseModal }) {
                 <HeaderLog />
                 <div className={cx('log-list')}>
                     <div className={cx('log-item')}>
-                        <Button leftIcon={<FbLogIcon />}>
+                        <Button leftIcon={<FbLogIcon />} onClick={handleSignInFb}>
                             <span className={cx('log-title')}>Tiếp tục với Facebook</span>
                         </Button>
                     </div>
                     <div className={cx('log-item')}>
-                        <Button leftIcon={<UserLogIcon />}>
+                        <Button leftIcon={<UserLogIcon />} to={config.routes.signup}>
                             <span className={cx('log-title')}>Tiếp tục với số điện thoại hoặc Email</span>
                         </Button>
                     </div>
                     <div className={cx('log-item')}>
-                        <Button leftIcon={<GGLogIcon />} onClick={handleSignIn}>
+                        <Button leftIcon={<GGLogIcon />} onClick={handleSignInGG}>
                             <span className={cx('log-title')}>Tiếp tục với Google</span>
                         </Button>
                     </div>

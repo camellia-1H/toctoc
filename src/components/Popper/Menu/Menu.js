@@ -31,6 +31,7 @@ function Menu({ children, items = [], hideOnClick = false, onChange = defaultFn 
                             onChange(item);
                         }
                     }}
+                    to={item.to}
                     onClickLogOut={item.onClickLogOut}
                 />
             );
