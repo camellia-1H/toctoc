@@ -32,32 +32,32 @@ function AccountProfile() {
     const [saved, setSaved] = useState(false);
     const videoId = doc(db, 'user_video', `${user?.email}`);
 
-    const upload = async () => {
-        if (user?.email) {
-            setSaved(true);
-            await updateDoc(videoId, {
-                video: arrayUnion({
-                    video_id: '2',
-                    play: 'https://yt3.ggpht.com/VWBZ360UFEUxVD-Udx81wsl2QpcMwWIievwhz34vRdACTr7S_tVkflfCzV2tOoOo_Fy95URJmQ=s88-c-k-c0x00ffffff-no-rj',
-                    cover: 'https://yt3.ggpht.com/VWBZ360UFEUxVD-Udx81wsl2QpcMwWIievwhz34vRdACTr7S_tVkflfCzV2tOoOo_Fy95URJmQ=s88-c-k-c0x00ffffff-no-rj',
-                    play_count: 200,
-                    des: 'nguu2',
-                    isPrivate: false,
-                    isPublic: true,
-                }),
-            });
-        } else {
-            alert('dang nhap di da');
-        }
-    };
+    // const upload = async () => {
+    //     if (user?.email) {
+    //         setSaved(true);
+    //         await updateDoc(videoId, {
+    //             video: arrayUnion({
+    //                 video_id: '2',
+    //                 play: 'https://yt3.ggpht.com/VWBZ360UFEUxVD-Udx81wsl2QpcMwWIievwhz34vRdACTr7S_tVkflfCzV2tOoOo_Fy95URJmQ=s88-c-k-c0x00ffffff-no-rj',
+    //                 cover: 'https://yt3.ggpht.com/VWBZ360UFEUxVD-Udx81wsl2QpcMwWIievwhz34vRdACTr7S_tVkflfCzV2tOoOo_Fy95URJmQ=s88-c-k-c0x00ffffff-no-rj',
+    //                 play_count: 200,
+    //                 des: 'nguu2',
+    //                 isPrivate: false,
+    //                 isPublic: true,
+    //             }),
+    //         });
+    //     } else {
+    //         alert('dang nhap di da');
+    //     }
+    // };
 
-    const update = async () => {
-        if (user?.email) {
-            await updateDoc(videoId, {
-                'video.play_count': 200,
-            });
-        }
-    };
+    // const update = async () => {
+    //     if (user?.email) {
+    //         await updateDoc(videoId, {
+    //             'video.play_count': 200,
+    //         });
+    //     }
+    // };
 
     const deleteShow = async (passId) => {
         try {
@@ -104,11 +104,6 @@ function AccountProfile() {
                     </div>
                 </h3>
                 <h3 className={cx('nickname')}>No bio yet.</h3>
-
-                <button onClick={upload}>Click test</button>
-                <p>
-                    <button onClick={update}>update</button>
-                </p>
 
                 <div className={cx('user-layout')}>
                     <div className={cx('tag-contain')}>
