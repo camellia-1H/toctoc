@@ -46,7 +46,7 @@ export const AuthContextProvider = ({ children }) => {
         console.log('nguu');
         setDoc(doc(db, 'user', email), {
             user_id: user?.email ? user.email : email,
-            avatar: null,
+            avatar: '',
             bio: 'm nguu',
             followers: 0,
             following: 0,

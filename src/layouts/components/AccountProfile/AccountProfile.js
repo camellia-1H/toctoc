@@ -18,6 +18,7 @@ function AccountProfile() {
     console.log(user);
 
     const [videoList, setVideoList] = useState([]);
+    const [userInfo, setUserInfo] = useState({});
 
     // useEffect(() => {
     //     const fetchApi = async () => {
@@ -29,8 +30,11 @@ function AccountProfile() {
     //     console.log(videoList);
     // }, []);
 
+    // tương tự như kiểu like video ấy
     const [saved, setSaved] = useState(false);
+
     const videoId = doc(db, 'user_video', `${user?.email}`);
+    const userRef = doc(db, 'user', `${user?.email}`);
 
     // const upload = async () => {
     //     if (user?.email) {
@@ -59,7 +63,7 @@ function AccountProfile() {
     //     }
     // };
 
-    const deleteShow = async (passId) => {
+    const deleteVideo = async (passId) => {
         try {
             const result = videoList.filter((item) => item.video_id != passId);
             await updateDoc(videoId, {
@@ -67,6 +71,19 @@ function AccountProfile() {
             });
         } catch (e) {}
     };
+
+    useEffect(() => {
+        try {
+            console.log('effect2');
+            const ngu = async () => {
+                const result = await getDoc(userRef);
+                setUserInfo(result.data());
+            };
+            ngu();
+        } catch (error) {}
+    }, [user?.email]);
+
+    console.log(userInfo);
 
     useEffect(() => {
         onSnapshot(doc(db, 'user_video', `${user?.email}`), (doc) => {
@@ -79,14 +96,11 @@ function AccountProfile() {
             <div className={cx('user-page')}>
                 <div className={cx('user-header')}>
                     <div className={cx('avatar')}>
-                        <img
-                            className={cx('avatar-img')}
-                            src="https://scontent.fhan15-1.fna.fbcdn.net/v/t39.30808-6/323441730_967739090854048_936390828444513617_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=wghZizgvQaEAX8SzEZ1&_nc_ht=scontent.fhan15-1.fna&oh=00_AfChDKMH_8YEwxKsiiPFqqxxK3R6oIvYfnqUSV9nrerBPQ&oe=643921B8"
-                        />
+                        <img className={cx('avatar-img')} src={userInfo.avatar} />
                     </div>
                     <div>
-                        <h1 className={cx('username')}>manhdontcare</h1>
-                        <h3 className={cx('nickname')}>nopem</h3>
+                        <h1 className={cx('nickname')}>{userInfo.nickname}</h1>
+                        <h3 className={cx('username')}>{userInfo.username}</h3>
                         <Button text leftIcon={<FontAwesomeIcon icon={faEdit} />}>
                             Edit profile
                         </Button>
@@ -94,16 +108,16 @@ function AccountProfile() {
                 </div>
                 <h3 className={cx('info')}>
                     <div className={cx('mr')}>
-                        <strong className={cx('number')}>241</strong> <span className={cx('des')}>Following</span>
+                        <strong className={cx('number')}>{userInfo.following}</strong> <span className={cx('des')}>Following</span>
                     </div>
                     <div className={cx('mr')}>
-                        <strong className={cx('number')}>32</strong> <span className={cx('des')}>Followers</span>
+                        <strong className={cx('number')}>{userInfo.followers}</strong> <span className={cx('des')}>Followers</span>
                     </div>
                     <div className={cx('mr')}>
-                        <strong className={cx('number')}>5</strong> <span className={cx('des')}>Likes</span>
+                        <strong className={cx('number')}>{userInfo.like}</strong> <span className={cx('des')}>Likes</span>
                     </div>
                 </h3>
-                <h3 className={cx('nickname')}>No bio yet.</h3>
+                <h3 className={cx('nickname')}>{userInfo.bio || 'No bio yet.'}</h3>
 
                 <div className={cx('user-layout')}>
                     <div className={cx('tag-contain')}>
@@ -114,7 +128,7 @@ function AccountProfile() {
                     <div className={cx('video-contain')}>
                         <div className={cx('video-list')}>
                             {videoList?.map((video) => (
-                                <VideoItem key={video.video_id} video={video} deleteShow={deleteShow} />
+                                <VideoItem key={video.video_id} video={video} deleteVideo={deleteVideo} />
                             ))}
                         </div>
                     </div>

@@ -4,7 +4,7 @@ import { PlayVideo } from '~/components/Icons';
 
 const cx = classNames.bind(styles);
 
-function VideoItem({ video, deleteShow }) {
+function VideoItem({ video, deleteVideo }) {
     const handleVideoPlay = (e) => {
         e.target.play();
     };
@@ -23,7 +23,7 @@ function VideoItem({ video, deleteShow }) {
             <div className={cx('video-des')}>
                 <p>{video.des}</p>
             </div>
-            <button onClick={() => deleteShow(video.video_id)}>delete</button>
+            <button onClick={() => deleteVideo(video.video_id)}>delete</button>
         </div>
     );
 }
