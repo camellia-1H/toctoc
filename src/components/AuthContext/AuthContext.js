@@ -11,11 +11,13 @@ import {
     createUserWithEmailAndPassword,
 } from 'firebase/auth';
 import { auth, db } from './firebase';
-import { setDoc, addDoc, doc } from 'firebase/firestore';
+import { setDoc, addDoc, doc, getDoc, onSnapshot } from 'firebase/firestore';
 
 const AuthContext = createContext();
 export const AuthContextProvider = ({ children }) => {
     const [user, setUser] = useState({});
+    const [userInfo, setUserInfo] = useState({});
+    const [videoList, setVideoList] = useState([]);
 
     const googleSignIn = () => {
         const ggProvider = new GoogleAuthProvider();
@@ -84,7 +86,34 @@ export const AuthContextProvider = ({ children }) => {
         };
     }, [user]);
 
-    return <AuthContext.Provider value={{ googleSignIn, facebookSignIn, EaPSignIn, EaPSignUp, logOut, user }}>{children}</AuthContext.Provider>;
+    const userRef = doc(db, 'user', `${user?.email}`);
+
+    useEffect(() => {
+        try {
+            console.log('effect2');
+            const ngu = async () => {
+                const result = await getDoc(userRef);
+                setUserInfo(result.data());
+            };
+            ngu();
+        } catch (error) {}
+    }, [user?.email]);
+
+    console.log(userInfo);
+
+    // const videoFeedRef = doc(db, 'video_feed', 'video_feed');
+    useEffect(() => {
+        onSnapshot(doc(db, 'video_feed', 'video_feed'), (doc) => {
+            setVideoList(doc.data());
+            console.log(videoList);
+        });
+    }, []);
+
+    return (
+        <AuthContext.Provider value={{ googleSignIn, facebookSignIn, EaPSignIn, EaPSignUp, logOut, user, userInfo, videoList }}>
+            {children}
+        </AuthContext.Provider>
+    );
 };
 export const UserAuth = () => {
     return useContext(AuthContext);

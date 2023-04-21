@@ -1,18 +1,25 @@
 import classNames from 'classnames/bind';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 import styles from '../MainContent.module.scss';
 import Image from '~/components/Image';
 import Button from '~/components/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faComment, faHeart, faMusic, faShare } from '@fortawesome/free-solid-svg-icons';
-
+import { config } from '~/config';
 const cx = classNames.bind(styles);
 
 const Avatar = ({ data }) => {
+    // const { username = data.user.username } = useParams();
+    // const params = useParams();
+    // const username = params.data.user.username;
+    // let {nickname}
+    // params
     return (
-        <Link to={`/@${data.author.nickname}`}>
-            <Image className={cx('avatar')} src={data.author.avatar} alt="m ngu" />
+        // <Link to={`/@${data.user.username}`}>
+
+        <Link to={config.routes.profileLink(data.user.username)}>
+            <Image className={cx('avatar')} src={data.user.avatar} alt="m ngu" />
         </Link>
     );
 };
@@ -29,14 +36,14 @@ const VideoContent = ({ data }) => {
     return (
         <div className={cx('video-wrapper')}>
             <div className={cx('des')}>
-                <Link to={`/@${data.author.nickname}`} className={cx('des-user')}>
-                    <h3 className={cx('name')}>{data.author.nickname}</h3>
-                    <p className={cx('nickname')}>{data.author.unique_id}</p>
+                <Link to={`/@${data.user.username}`} className={cx('des-user')}>
+                    <h3 className={cx('name')}>{data.user.username}</h3>
+                    <p className={cx('nickname')}>{data.user.nickname}</p>
                     <span>.</span>
                     <span>2-11</span>
                 </Link>
                 <div className={cx('des-hastag')}>
-                    <span className={cx('descipt')}>{data.title}</span>
+                    <span className={cx('descipt')}>{data.video[0].des}</span>
                     <Link to="/upload" className={cx('hastag')}>
                         #ngu
                     </Link>
@@ -53,24 +60,25 @@ const VideoContent = ({ data }) => {
             </div>
 
             <div className={cx('video')}>
-                <div>
+                <div style={{ height: '400px' }}>
                     <video
                         // ref={videoRef}
                         className={cx('video-moe')}
                         onMouseEnter={handleVideoPlay}
                         onMouseLeave={handleVideoPause}
-                        src={data.play}
+                        src={data.video[0].play}
                         loop
-                        poster={data.cover}
+                        poster={data.video[0].cover}
                         // controls
-                        autoPlay></video>
+                        // autoPlay
+                    ></video>
                 </div>
                 <div className={cx('list-icon')}>
                     <button className={cx('btn-icon')}>
                         <p className={cx('icon-con')}>
                             <FontAwesomeIcon icon={faHeart} className={cx('icon')} />
                         </p>
-                        <h3 className={cx('quantity')}>55.1k</h3>
+                        <h3 className={cx('quantity')}>{data.video[0].play_count}</h3>
                     </button>
                     <button className={cx('btn-icon')}>
                         <p className={cx('icon-con')}>

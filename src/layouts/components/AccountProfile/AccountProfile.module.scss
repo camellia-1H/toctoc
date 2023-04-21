@@ -89,3 +89,118 @@
     display: flex;
     flex-wrap: wrap;
 }
+
+// edit profile
+
+.icon {
+    margin: 0 20px;
+    font-size: 25px;
+}
+
+.bd-bottom {
+    border-bottom: 1px solid rgb(224, 224, 224);
+}
+
+.p-15-0 {
+    padding: 15px 0;
+}
+
+.profile-head {
+    @extend .d-flex, .bd-bottom;
+    justify-content: space-between;
+}
+
+.title-head {
+    font-weight: 600;
+}
+
+.profile-container {
+    padding: 10px 0;
+}
+
+.profile-photo {
+    @extend .d-flex, .bd-bottom, .p-15-0;
+    align-items: normal;
+}
+
+.title {
+    width: 285px;
+    font-weight: 600;
+}
+
+.moe {
+    @extend .d-flex;
+    justify-content: center;
+    position: relative;
+}
+
+.profile-img-container {
+    width: 96px;
+    height: 96px;
+}
+
+.profile-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.profile-edit {
+    background-color: rgb(250, 244, 244);
+    padding: 6px 10px;
+    border-radius: 50%;
+    border: 1px solid rgba(219, 219, 219, 0.5);
+    position: absolute;
+    top: 60px;
+    transform: translateX(80%);
+    cursor: pointer;
+}
+
+.file-input {
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    position: absolute;
+    top: 4px;
+    cursor: pointer;
+}
+
+//
+
+.profile-username {
+    @extend .d-flex, .p-15-0, .bd-bottom;
+    align-items: normal;
+}
+
+.title-username {
+    width: 150px;
+    font-weight: 600;
+}
+
+.text-input {
+    background-color: rgb(241, 241, 241);
+    overflow: hidden;
+    border-radius: 4px;
+}
+
+//
+
+.profile-nickname {
+    @extend .d-flex, .p-15-0, .bd-bottom;
+    align-items: normal;
+}
+
+.profile-bio {
+    @extend .d-flex, .p-15-0, .bd-bottom;
+    align-items: normal;
+}
+
+textarea {
+    resize: none;
+}
+
+.profile-btn {
+    @extend .d-flex, .p-15-0;
+    justify-content: right;
+}

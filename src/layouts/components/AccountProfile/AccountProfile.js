@@ -10,15 +10,17 @@ import Button from '~/components/Button/Button';
 import * as videoService from '~/services/videoService';
 import { UserAuth } from '~/components/AuthContext/AuthContext';
 import VideoItem from '~/components/VideoItem/VideoItem';
+import ModalEditProfile from './ModalEditProfile';
 
 const cx = classNames.bind(styles);
 
 function AccountProfile() {
-    const { user } = UserAuth();
+    const { user, userInfo } = UserAuth();
     console.log(user);
+    console.log(userInfo);
 
     const [videoList, setVideoList] = useState([]);
-    const [userInfo, setUserInfo] = useState({});
+    const [modalShow, setModalShow] = useState(false);
 
     // useEffect(() => {
     //     const fetchApi = async () => {
@@ -34,7 +36,6 @@ function AccountProfile() {
     const [saved, setSaved] = useState(false);
 
     const videoId = doc(db, 'user_video', `${user?.email}`);
-    const userRef = doc(db, 'user', `${user?.email}`);
 
     // const upload = async () => {
     //     if (user?.email) {
@@ -73,68 +74,58 @@ function AccountProfile() {
     };
 
     useEffect(() => {
-        try {
-            console.log('effect2');
-            const ngu = async () => {
-                const result = await getDoc(userRef);
-                setUserInfo(result.data());
-            };
-            ngu();
-        } catch (error) {}
-    }, [user?.email]);
-
-    console.log(userInfo);
-
-    useEffect(() => {
         onSnapshot(doc(db, 'user_video', `${user?.email}`), (doc) => {
             setVideoList(doc.data()?.video);
         });
     }, [user?.email]);
 
     return (
-        <div className={cx('wrapper')}>
-            <div className={cx('user-page')}>
-                <div className={cx('user-header')}>
-                    <div className={cx('avatar')}>
-                        <img className={cx('avatar-img')} src={userInfo.avatar} />
+        <>
+            <div className={cx('wrapper')}>
+                <div className={cx('user-page')}>
+                    <div className={cx('user-header')}>
+                        <div className={cx('avatar')}>
+                            <img className={cx('avatar-img')} src={userInfo.avatar} />
+                        </div>
+                        <div>
+                            <h1 className={cx('nickname')}>{userInfo.nickname}</h1>
+                            <h3 className={cx('username')}>{userInfo.username}</h3>
+                            <Button text leftIcon={<FontAwesomeIcon icon={faEdit} />} onClick={() => setModalShow(true)}>
+                                Edit profile
+                            </Button>
+                        </div>
                     </div>
-                    <div>
-                        <h1 className={cx('nickname')}>{userInfo.nickname}</h1>
-                        <h3 className={cx('username')}>{userInfo.username}</h3>
-                        <Button text leftIcon={<FontAwesomeIcon icon={faEdit} />}>
-                            Edit profile
-                        </Button>
-                    </div>
-                </div>
-                <h3 className={cx('info')}>
-                    <div className={cx('mr')}>
-                        <strong className={cx('number')}>{userInfo.following}</strong> <span className={cx('des')}>Following</span>
-                    </div>
-                    <div className={cx('mr')}>
-                        <strong className={cx('number')}>{userInfo.followers}</strong> <span className={cx('des')}>Followers</span>
-                    </div>
-                    <div className={cx('mr')}>
-                        <strong className={cx('number')}>{userInfo.like}</strong> <span className={cx('des')}>Likes</span>
-                    </div>
-                </h3>
-                <h3 className={cx('nickname')}>{userInfo.bio || 'No bio yet.'}</h3>
+                    <h3 className={cx('info')}>
+                        <div className={cx('mr')}>
+                            <strong className={cx('number')}>{userInfo.following}</strong> <span className={cx('des')}>Following</span>
+                        </div>
+                        <div className={cx('mr')}>
+                            <strong className={cx('number')}>{userInfo.followers}</strong> <span className={cx('des')}>Followers</span>
+                        </div>
+                        <div className={cx('mr')}>
+                            <strong className={cx('number')}>{userInfo.like}</strong> <span className={cx('des')}>Likes</span>
+                        </div>
+                    </h3>
+                    <h3 className={cx('nickname')}>{userInfo.bio || 'No bio yet.'}</h3>
 
-                <div className={cx('user-layout')}>
-                    <div className={cx('tag-contain')}>
-                        <p className={cx('tag', 'tag1')}>Videos</p>
-                        <p className={cx('tag', 'tag2')}>Liked</p>
-                        <div className={cx('w230')}></div>
-                    </div>
-                    <div className={cx('video-contain')}>
-                        <div className={cx('video-list')}>
-                            {videoList?.map((video) => (
-                                <VideoItem key={video.video_id} video={video} deleteVideo={deleteVideo} />
-                            ))}
+                    <div className={cx('user-layout')}>
+                        <div className={cx('tag-contain')}>
+                            <p className={cx('tag', 'tag1')}>Videos</p>
+                            <p className={cx('tag', 'tag2')}>Liked</p>
+                            <div className={cx('w230')}></div>
+                        </div>
+                        <div className={cx('video-contain')}>
+                            <div className={cx('video-list')}>
+                                {videoList?.map((video) => (
+                                    <VideoItem key={video.video_id} video={video} deleteVideo={deleteVideo} />
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+            <ModalEditProfile modalIsOpen={modalShow} handleCloseModal={() => setModalShow(false)} />
+        </>
     );
 }
 

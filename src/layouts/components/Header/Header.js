@@ -52,7 +52,7 @@ function Header({ userIsLogin, handleShowModal }) {
     // const params = useParams();
     // const nickname = params.email;
 
-    const { user, logOut } = UserAuth();
+    const { user, logOut, userInfo } = UserAuth();
     console.log(user);
     // Handle logic
     const handleMenuChange = (menuItem) => {
@@ -151,7 +151,7 @@ function Header({ userIsLogin, handleShowModal }) {
                             <Image
                                 className={cx('user-avatar')}
                                 // src="https://scontent.fhan15-1.fna.fbcdn.net/v/t39.30808-6/323441730_967739090854048_936390828444513617_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=wghZizgvQaEAX8SzEZ1&_nc_ht=scontent.fhan15-1.fna&oh=00_AfChDKMH_8YEwxKsiiPFqqxxK3R6oIvYfnqUSV9nrerBPQ&oe=643921B8"
-                                src={user?.photoURL}
+                                src={userInfo?.avatar}
                                 alt="Dao Manh"
                             />
                         ) : (

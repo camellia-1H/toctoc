@@ -2,7 +2,7 @@ export const routes = {
     home: '/',
     following: '/following',
     // profile: `/@${nickName}`,
-    profile: '/@:nickname',
+    profile: '/*',
     profileLink: (nickname) => `/@${nickname}`,
     upload: '/upload',
     search: '/search',
