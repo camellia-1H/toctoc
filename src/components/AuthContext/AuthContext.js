@@ -11,7 +11,7 @@ import {
     createUserWithEmailAndPassword,
 } from 'firebase/auth';
 import { auth, db } from './firebase';
-import { setDoc, addDoc, doc, getDoc, onSnapshot } from 'firebase/firestore';
+import { setDoc, addDoc, doc, getDocs, onSnapshot, collection, where, query } from 'firebase/firestore';
 
 const AuthContext = createContext();
 export const AuthContextProvider = ({ children }) => {
@@ -73,8 +73,6 @@ export const AuthContextProvider = ({ children }) => {
         signOut(auth);
     };
 
-    const userRef = doc(db, 'user_video', `${user?.email}`);
-
     useEffect(() => {
         onSnapshot(doc(db, 'user_video', `${user?.email}`), (doc) => {
             setUserInfo(doc.data());
@@ -85,11 +83,36 @@ export const AuthContextProvider = ({ children }) => {
     console.log(userInfo);
 
     // const videoFeedRef = doc(db, 'video_feed', 'video_feed');
+    // useEffect(() => {
+    //     onSnapshot(doc(db, 'video_feed', 'video_feed'), (doc) => {
+    //         setVideoList(doc.data());
+    //         console.log(videoList);
+    //     });
+    // }, []);
+
+    // useEffect(() => {
+    //     const ngu = async () => {
+    //         console.log('maincontent');
+    //         const querySnapshot = await getDocs(collection(db, 'user_video'));
+    //         querySnapshot.forEach((element) => {
+    //             // videoList.push(element.data());
+    //             console.log('put');
+    //             console.log(element.data());
+    //         });
+    //     };
+    //     ngu();
+    // }, []);
+
     useEffect(() => {
-        onSnapshot(doc(db, 'video_feed', 'video_feed'), (doc) => {
-            setVideoList(doc.data());
-            console.log(videoList);
-        });
+        const videoRef = [];
+        const ngu = async () => {
+            const querySnapshot = await getDocs(collection(db, 'user_video'));
+            querySnapshot.forEach((doc) => {
+                videoRef.push(doc.data());
+            });
+        };
+        ngu();
+        setVideoList(videoRef);
     }, []);
 
     useEffect(() => {

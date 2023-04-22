@@ -1,7 +1,7 @@
 import classNames from 'classnames/bind';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleQuestion, faCoins, faEarthAsia, faEllipsisVertical, faGear, faKeyboard, faSignOut, faUser } from '@fortawesome/free-solid-svg-icons';
-import { Link, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
 
@@ -14,7 +14,7 @@ import { InboxIcon, MessageIcon, MoreIcon } from '~/components/Icons';
 import Image from '~/components/Image';
 import Search from '../Search';
 import { UserAuth } from '~/components/AuthContext/AuthContext';
-import { useRef } from 'react';
+
 const cx = classNames.bind(styles);
 
 const MENU_ITEMS = [
@@ -56,7 +56,8 @@ function Header({ userIsLogin, handleShowModal }) {
     const { user, logOut, userInfo } = UserAuth();
     console.log(user);
     console.log(userInfo?.username);
-    const username = useRef(config.routes.profileLink(userInfo?.username));
+
+    const username = userInfo?.username;
     console.log(username);
     // Handle logic
     const handleMenuChange = (menuItem) => {
@@ -79,7 +80,7 @@ function Header({ userIsLogin, handleShowModal }) {
             icon: <FontAwesomeIcon icon={faUser} />,
             title: 'View profile',
             // to: `/@${user.email}`,
-            to: `${username.current}`,
+            to: config.routes.profileLink(username),
             // to: config.routes.profileLink(nickname),
             // to: '/@manh',
         },

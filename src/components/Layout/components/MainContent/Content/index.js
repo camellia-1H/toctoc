@@ -18,8 +18,8 @@ const Avatar = ({ data }) => {
     return (
         // <Link to={`/@${data.user.username}`}>
 
-        <Link to={config.routes.profileLink(data.user.username)}>
-            <Image className={cx('avatar')} src={data.user.avatar} alt="m ngu" />
+        <Link to={config.routes.profileLink(data.username)}>
+            <Image className={cx('avatar')} src={data.avatar} alt="m ngu" />
         </Link>
     );
 };
@@ -36,14 +36,14 @@ const VideoContent = ({ data }) => {
     return (
         <div className={cx('video-wrapper')}>
             <div className={cx('des')}>
-                <Link to={config.routes.profileLink(data.user.username)} className={cx('des-user')}>
-                    <h3 className={cx('name')}>{data.user.username}</h3>
-                    <p className={cx('nickname')}>{data.user.nickname}</p>
+                <Link to={config.routes.profileLink(data.username)} className={cx('des-user')}>
+                    <h3 className={cx('name')}>{data.username}</h3>
+                    <p className={cx('nickname')}>{data.nickname}</p>
                     <span>.</span>
                     <span>2-11</span>
                 </Link>
                 <div className={cx('des-hastag')}>
-                    <span className={cx('descipt')}>{data.video[0].des}</span>
+                    <span className={cx('descipt')}>{data.video.length > 0 ? data.video[0].des : ''}</span>
                     <Link to="/upload" className={cx('hastag')}>
                         #ngu
                     </Link>

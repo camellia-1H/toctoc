@@ -9,7 +9,7 @@ const cx = classNames.bind(styles);
 
 function MainContent() {
     // const [videoList, setVideoList] = useState([]);
-    const { videoList } = UserAuth();
+    const { videoList, user } = UserAuth();
     console.log(videoList);
     // useEffect(() => {
     //     const fetchApi = async () => {
@@ -23,8 +23,9 @@ function MainContent() {
     return (
         <div className={cx('wrapper')}>
             {/* render các video */}
-            {videoList.video_lists?.map((data) => {
-                return <Content key={data.user.user_id} data={data} />;
+            {videoList?.map((data) => {
+                // return <Content key={data.user_id} data={data} />
+                return user?.email != data.user_id && data.video.length > 0 && <Content key={data.user_id} data={data} />;
             })}
         </div>
     );
