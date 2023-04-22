@@ -1,9 +1,9 @@
 export const routes = {
     home: '/',
     following: '/following',
-    // profile: `/@${nickName}`,
-    profile: '/*',
-    profileLink: (nickname) => `/@${nickname}`,
+    profile: '/:username',
+    // profile: '/*',
+    profileLink: (username) => `/${username}`,
     upload: '/upload',
     search: '/search',
     live: '/live',

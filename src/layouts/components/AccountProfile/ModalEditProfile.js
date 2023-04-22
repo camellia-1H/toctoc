@@ -53,9 +53,9 @@ function ModalEditProfile({ modalIsOpen, handleCloseModal }) {
     };
 
     const uploadToDatabase = async (url) => {
-        const userRef = doc(db, 'user', user?.email);
+        const userRef = doc(db, 'user_video', user?.email);
         await updateDoc(userRef, {
-            avatar: url,
+            avatar: `${url ? url : userInfo.avatar}`,
             bio: bio,
             followers: userInfo.followers,
             following: userInfo.following,
@@ -67,27 +67,31 @@ function ModalEditProfile({ modalIsOpen, handleCloseModal }) {
     };
 
     const handleClick = (e) => {
-        if (file === null) return;
-        const fileRef = ref(storage, `files/${file.name}`);
-        const uploadTask = uploadBytesResumable(fileRef, file);
+        if (file === null) {
+            uploadToDatabase(null);
+            navigate('/');
+        } else {
+            const fileRef = ref(storage, `files/${file.name}`);
+            const uploadTask = uploadBytesResumable(fileRef, file);
 
-        uploadTask.on(
-            'state_changed',
-            (snapshot) => {},
-            (error) => {
-                console.log('Tải lên khong thành công');
-                alert('Tải lên khong thành công');
-            },
-            () => {
-                console.log('success!!');
-                navigate('/');
-                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                    uploadToDatabase(downloadURL);
-                    setFile(downloadURL);
-                    console.log(downloadURL);
-                });
-            },
-        );
+            uploadTask.on(
+                'state_changed',
+                (snapshot) => {},
+                (error) => {
+                    console.log('Tải lên khong thành công');
+                    alert('Tải lên khong thành công');
+                },
+                () => {
+                    console.log('success!!');
+                    navigate('/');
+                    getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                        uploadToDatabase(downloadURL);
+                        setFile(downloadURL);
+                        console.log(downloadURL);
+                    });
+                },
+            );
+        }
     };
 
     return (

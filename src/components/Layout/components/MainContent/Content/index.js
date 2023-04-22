@@ -36,7 +36,7 @@ const VideoContent = ({ data }) => {
     return (
         <div className={cx('video-wrapper')}>
             <div className={cx('des')}>
-                <Link to={`/@${data.user.username}`} className={cx('des-user')}>
+                <Link to={config.routes.profileLink(data.user.username)} className={cx('des-user')}>
                     <h3 className={cx('name')}>{data.user.username}</h3>
                     <p className={cx('nickname')}>{data.user.nickname}</p>
                     <span>.</span>

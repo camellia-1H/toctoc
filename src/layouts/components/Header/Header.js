@@ -14,6 +14,7 @@ import { InboxIcon, MessageIcon, MoreIcon } from '~/components/Icons';
 import Image from '~/components/Image';
 import Search from '../Search';
 import { UserAuth } from '~/components/AuthContext/AuthContext';
+import { useRef } from 'react';
 const cx = classNames.bind(styles);
 
 const MENU_ITEMS = [
@@ -54,6 +55,9 @@ function Header({ userIsLogin, handleShowModal }) {
 
     const { user, logOut, userInfo } = UserAuth();
     console.log(user);
+    console.log(userInfo?.username);
+    const username = useRef(config.routes.profileLink(userInfo?.username));
+    console.log(username);
     // Handle logic
     const handleMenuChange = (menuItem) => {
         switch (menuItem.type) {
@@ -75,7 +79,7 @@ function Header({ userIsLogin, handleShowModal }) {
             icon: <FontAwesomeIcon icon={faUser} />,
             title: 'View profile',
             // to: `/@${user.email}`,
-            to: config.routes.profile,
+            to: `${username.current}`,
             // to: config.routes.profileLink(nickname),
             // to: '/@manh',
         },

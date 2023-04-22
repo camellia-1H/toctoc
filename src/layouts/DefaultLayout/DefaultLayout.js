@@ -37,8 +37,11 @@ function DefaultLayout({ children }) {
             <Header userIsLogin={userIsLogin} handleShowModal={handleShowModal} />
             <div className={cx('container')}>
                 <Sidebar userIsLogin={userIsLogin} handleShowModal={handleShowModal} />
-                {!userIsLogin && <MainContent />}
-                <div className={cx('content')}>{children}</div>
+
+                <div className={cx('content')}>
+                    {children}
+                    {!userIsLogin && <MainContent />}
+                </div>
             </div>
             {!userIsLogin && <Log modalIsOpen={modalIsOpen} handleCloseModal={handleCloseModal} />}
         </div>

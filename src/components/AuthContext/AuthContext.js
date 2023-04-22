@@ -21,9 +21,23 @@ export const AuthContextProvider = ({ children }) => {
 
     const googleSignIn = () => {
         const ggProvider = new GoogleAuthProvider();
-        signInWithPopup(auth, ggProvider);
-        // .then((data) => {})
-        // .catch((error) => {});
+        signInWithPopup(auth, ggProvider)
+            .then((data) => {
+                console.log(data);
+                setDoc(doc(db, 'user_video', data?.email), {
+                    user_id: data.email,
+                    bio: 'No bio yet',
+                    followers: 0,
+                    following: 0,
+                    like: 0,
+                    nickname: `user${Math.floor(Math.random() * 10000)}`,
+                    username: `user${Math.floor(Math.random() * 10000)}`,
+                    avatar: data.photoURL,
+                    video: [],
+                });
+                console.log('signin GG');
+            })
+            .catch((error) => {});
     };
 
     const facebookSignIn = () => {
@@ -41,21 +55,19 @@ export const AuthContextProvider = ({ children }) => {
     // lưu thông tin user mới luôn : nick name, fl = 0 ...
     const EaPSignUp = (email, password) => {
         createUserWithEmailAndPassword(auth, email, password);
+        console.log('setdoc');
         setDoc(doc(db, 'user_video', email), {
-            user_id: user?.email ? user.email : email,
-            video: [],
-        });
-        console.log('nguu');
-        setDoc(doc(db, 'user', email), {
-            user_id: user?.email ? user.email : email,
-            avatar: '',
-            bio: 'm nguu',
+            user_id: user?.email ? user?.email : email,
+            bio: 'No bio yet',
             followers: 0,
             following: 0,
             like: 0,
-            nickname: 'manhdontcare',
-            username: 'nopem',
+            nickname: `user${Math.floor(Math.random() * 10000)}`,
+            username: `user${Math.floor(Math.random() * 10000)}`,
+            avatar: '',
+            video: [],
         });
+        console.log('nguu');
     };
 
     const logOut = () => {
@@ -69,34 +81,31 @@ export const AuthContextProvider = ({ children }) => {
             //     return;
             // }
             setUser(currentUser);
-            // const docRef = await addDoc(collection(db, 'profile'), {
-            //     avatar: currentUser.photoURL,
-            //     bio: currentUser.email,
-            //     displayName: currentUser.displayName,
-            //     follower: 0,
-            //     following: 0,
-            //     nickName: currentUser.uid,
-            // });
-            // console.log(docRef.id);
-            //cũng là accessToken
-            // const token = await currentUser.getIdToken();
         });
         return () => {
             unsubcribe();
         };
     }, [user]);
 
-    const userRef = doc(db, 'user', `${user?.email}`);
+    const userRef = doc(db, 'user_video', `${user?.email}`);
+
+    // useEffect(() => {
+    //     try {
+    //         console.log('effect2');
+    //         const ngu = async () => {
+    //             const result = await getDoc(userRef);
+    //             console.log(result);
+    //             setUserInfo(result.data());
+    //         };
+    //         ngu();
+    //     } catch (error) {}
+    // }, [user?.email]);
 
     useEffect(() => {
-        try {
-            console.log('effect2');
-            const ngu = async () => {
-                const result = await getDoc(userRef);
-                setUserInfo(result.data());
-            };
-            ngu();
-        } catch (error) {}
+        onSnapshot(doc(db, 'user_video', `${user?.email}`), (doc) => {
+            setUserInfo(doc.data());
+            console.log(userInfo);
+        });
     }, [user?.email]);
 
     console.log(userInfo);
