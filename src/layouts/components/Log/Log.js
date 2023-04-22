@@ -1,5 +1,4 @@
 import ReactModal from 'react-modal';
-
 import classNames from 'classnames/bind';
 import styles from './Log.module.scss';
 import { CloseModalIcon } from '~/components/Icons';
@@ -35,7 +34,7 @@ const customStyles = {
 // });
 
 function Log({ modalIsOpen, handleCloseModal }) {
-    const { googleSignIn, facebookSignIn } = UserAuth();
+    const { googleSignIn, facebookSignIn, user } = UserAuth();
 
     const handleSignInFb = async () => {
         try {

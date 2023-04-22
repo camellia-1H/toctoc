@@ -23,16 +23,15 @@ export const AuthContextProvider = ({ children }) => {
         const ggProvider = new GoogleAuthProvider();
         signInWithPopup(auth, ggProvider)
             .then((data) => {
-                console.log(data);
-                setDoc(doc(db, 'user_video', data?.email), {
-                    user_id: data.email,
+                setDoc(doc(db, 'user_video', data.user?.email), {
+                    user_id: data.user.email,
                     bio: 'No bio yet',
                     followers: 0,
                     following: 0,
                     like: 0,
-                    nickname: `user${Math.floor(Math.random() * 10000)}`,
-                    username: `user${Math.floor(Math.random() * 10000)}`,
-                    avatar: data.photoURL,
+                    nickname: `userGG${Math.floor(Math.random() * 9000) + 1000}`,
+                    username: `userGG${Math.floor(Math.random() * 9000) + 1000}`,
+                    avatar: data.user.photoURL,
                     video: [],
                 });
                 console.log('signin GG');
@@ -62,8 +61,8 @@ export const AuthContextProvider = ({ children }) => {
             followers: 0,
             following: 0,
             like: 0,
-            nickname: `user${Math.floor(Math.random() * 10000)}`,
-            username: `user${Math.floor(Math.random() * 10000)}`,
+            nickname: `user${Math.floor(Math.random() * 9000) + 1000}`,
+            username: `user${Math.floor(Math.random() * 9000) + 1000}`,
             avatar: '',
             video: [],
         });
@@ -74,32 +73,7 @@ export const AuthContextProvider = ({ children }) => {
         signOut(auth);
     };
 
-    useEffect(() => {
-        console.log('use effect');
-        const unsubcribe = onAuthStateChanged(auth, async (currentUser) => {
-            // if (!currentUser) {
-            //     return;
-            // }
-            setUser(currentUser);
-        });
-        return () => {
-            unsubcribe();
-        };
-    }, [user]);
-
     const userRef = doc(db, 'user_video', `${user?.email}`);
-
-    // useEffect(() => {
-    //     try {
-    //         console.log('effect2');
-    //         const ngu = async () => {
-    //             const result = await getDoc(userRef);
-    //             console.log(result);
-    //             setUserInfo(result.data());
-    //         };
-    //         ngu();
-    //     } catch (error) {}
-    // }, [user?.email]);
 
     useEffect(() => {
         onSnapshot(doc(db, 'user_video', `${user?.email}`), (doc) => {
@@ -117,6 +91,19 @@ export const AuthContextProvider = ({ children }) => {
             console.log(videoList);
         });
     }, []);
+
+    useEffect(() => {
+        console.log('use effect');
+        const unsubcribe = onAuthStateChanged(auth, async (currentUser) => {
+            // if (!currentUser) {
+            //     return;
+            // }
+            setUser(currentUser);
+        });
+        return () => {
+            unsubcribe();
+        };
+    }, [user?.email]);
 
     return (
         <AuthContext.Provider value={{ googleSignIn, facebookSignIn, EaPSignIn, EaPSignUp, logOut, user, userInfo, videoList }}>
