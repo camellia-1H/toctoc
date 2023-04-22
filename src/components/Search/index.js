@@ -4,11 +4,13 @@ import styles from './Search.module.scss';
 import HeadlessTippy from '@tippyjs/react/headless';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleXmark, faMagnifyingGlass, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { collection, query, where, getDocs } from 'firebase/firestore';
+import { db } from '../AuthContext/firebase';
 
 import { Wrapper as PopperWrapper } from '~/components/Popper';
 import AccountItem from '~/components/Search/AccountItem';
 import { useDeboubce } from '~/hooks';
-import * as searchServices from '~/services/searchService';
+// import * as searchServices from '~/services/searchService';
 
 const cx = classNames.bind(styles);
 
@@ -22,24 +24,45 @@ function Search() {
 
     const inputRef = useRef();
 
+    // useEffect(() => {
+    //     if (!debounceValue.trim()) {
+    //         setSearchResult([]);
+    //         return;
+    //     }
+
+    //     const fetchApi = async () => {
+    //         setLoading(true);
+
+    //         const result = await searchServices.search(debounceValue);
+
+    //         setSearchResult(result);
+    //         setLoading(false);
+    //     };
+
+    //     fetchApi();
+    // }, [debounceValue]);
+
     useEffect(() => {
         if (!debounceValue.trim()) {
             setSearchResult([]);
             return;
         }
 
-        const fetchApi = async () => {
+        const ngu = async () => {
+            const resultRef = [];
             setLoading(true);
-
-            const result = await searchServices.search(debounceValue);
-
-            setSearchResult(result);
+            const q = query(collection(db, 'user_vieo'), where('username', '==', debounceValue));
+            const querySnapshot = await getDocs(q);
+            querySnapshot.forEach((doc) => {
+                resultRef.push(doc.data());
+            });
+            console.log(resultRef);
+            setSearchResult(resultRef);
             setLoading(false);
         };
 
-        fetchApi();
+        ngu();
     }, [debounceValue]);
-
     const hanleClear = () => {
         setSearchValue('');
         inputRef.current.focus();

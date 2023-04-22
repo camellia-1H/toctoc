@@ -75,9 +75,14 @@ function Profile() {
                         <div>
                             <h1 className={cx('nickname')}>{user.nickname}</h1>
                             <h3 className={cx('username')}>{user.username}</h3>
-                            <Button text leftIcon={<FontAwesomeIcon icon={faEdit} />} onClick={() => setModalShow(true)}>
-                                Edit profile
-                            </Button>
+
+                            {userInfo?.user_id != user.user_id ? (
+                                <Button primary>Follow</Button>
+                            ) : (
+                                <Button text leftIcon={<FontAwesomeIcon icon={faEdit} />} onClick={() => setModalShow(true)}>
+                                    Edit profile
+                                </Button>
+                            )}
                         </div>
                     </div>
                     <h3 className={cx('info')}>

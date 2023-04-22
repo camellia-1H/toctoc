@@ -82,27 +82,6 @@ export const AuthContextProvider = ({ children }) => {
 
     console.log(userInfo);
 
-    // const videoFeedRef = doc(db, 'video_feed', 'video_feed');
-    // useEffect(() => {
-    //     onSnapshot(doc(db, 'video_feed', 'video_feed'), (doc) => {
-    //         setVideoList(doc.data());
-    //         console.log(videoList);
-    //     });
-    // }, []);
-
-    // useEffect(() => {
-    //     const ngu = async () => {
-    //         console.log('maincontent');
-    //         const querySnapshot = await getDocs(collection(db, 'user_video'));
-    //         querySnapshot.forEach((element) => {
-    //             // videoList.push(element.data());
-    //             console.log('put');
-    //             console.log(element.data());
-    //         });
-    //     };
-    //     ngu();
-    // }, []);
-
     useEffect(() => {
         const videoRef = [];
         const ngu = async () => {
