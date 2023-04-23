@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { collection, query, where, getDocs, updateDoc, doc } from 'firebase/firestore';
+import { collection, query, where, getDocs, getDoc, updateDoc, doc } from 'firebase/firestore';
 import { db } from '~/components/AuthContext/firebase';
 import classNames from 'classnames/bind';
 
-import AccountProfile from '~/layouts/components/AccountProfile/AccountProfile';
 import ModalEditProfile from '~/layouts/components/AccountProfile/ModalEditProfile';
 import styles from '~/layouts/components/AccountProfile/AccountProfile.module.scss';
 import Button from '~/components/Button/Button';
@@ -20,14 +19,18 @@ function Profile() {
     // console.log(params?.username);
     // return <AccountProfile />;
     const { userInfo } = UserAuth();
+    // người đang đăng nhập
 
     console.log(userInfo);
     let { username } = useParams();
     const [modalShow, setModalShow] = useState(false);
     const [user, setUser] = useState({});
     const [videoList, setVideoList] = useState([]);
+    const [isFollow, setFollow] = useState(false);
+    // const [followingList, setFollowingList] = useState([]);
 
     console.log(username);
+    // Là user mà xem thông tin
     const userRef = query(collection(db, 'user_video'), where('username', '==', username));
 
     useEffect(() => {
@@ -52,7 +55,7 @@ function Profile() {
                 ngu();
             } catch (error) {}
         }
-    }, [userInfo]);
+    }, [userInfo, username]);
 
     const videoRef = doc(db, 'user_video', `${user?.user_id}`);
     const deleteVideo = async (passId) => {
@@ -64,6 +67,71 @@ function Profile() {
         } catch (e) {}
     };
 
+    useEffect(() => {
+        const followingRef = query(collection(db, 'user_video'), where('following', 'array-contains', username));
+
+        const ngu = async () => {
+            try {
+                const result = await getDocs(followingRef);
+                // có result.docs.length > 0 thì mới có doc.data()
+                result.forEach((doc) => {
+                    if (doc?.data().username == userInfo.username) {
+                        setFollow(true);
+                    } else {
+                        setFollow(false);
+                    }
+                });
+                // if (result.docs.length == 0) {
+                //     setFollow(false);
+                // } else setFollow(true);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        ngu();
+    }, [username, isFollow, userInfo.following?.length]);
+
+    // Lỗi unfollow, follow
+
+    const handleUnFollow = async () => {
+        const followingRef = doc(db, 'user_video', `${userInfo?.user_id}`);
+        console.log(followingRef);
+        if (isFollow) {
+            const index = userInfo.following.indexOf(username);
+            console.log(index);
+            console.log(userInfo.following);
+
+            // phải cộng thêm 1 xóa mới chuẩn index cần xóa
+
+            if (index > -1) {
+                const result = userInfo.following.splice(index + 1, 1);
+                console.log(result);
+
+                await updateDoc(followingRef, {
+                    following: result,
+                });
+
+                setFollow(false);
+            }
+        } else {
+        }
+    };
+
+    const handleFollow = async () => {
+        const followingRef = doc(db, 'user_video', `${userInfo?.user_id}`);
+        if (isFollow == false) {
+            userInfo.following.push(user.username); // push trả về length
+            const result = userInfo.following;
+            console.log(result);
+
+            await updateDoc(followingRef, {
+                following: result,
+            });
+
+            setFollow(true);
+        }
+    };
+
     return (
         <>
             <div className={cx('wrapper')}>
@@ -73,11 +141,24 @@ function Profile() {
                             <img className={cx('avatar-img')} src={user.avatar} />
                         </div>
                         <div>
-                            <h1 className={cx('nickname')}>{user.nickname}</h1>
-                            <h3 className={cx('username')}>{user.username}</h3>
+                            <h1 className={cx('nickname')}>{user.username}</h1>
+                            <h3 className={cx('username')}>{user.nickname}</h3>
 
                             {userInfo?.user_id != user.user_id ? (
-                                <Button primary>Follow</Button>
+                                <div className={cx('button-container')}>
+                                    {isFollow ? (
+                                        <>
+                                            <Button outline>Messages</Button>
+                                            <Button onClick={handleUnFollow} primary>
+                                                Unfollow
+                                            </Button>
+                                        </>
+                                    ) : (
+                                        <Button onClick={handleFollow} primary>
+                                            Follow
+                                        </Button>
+                                    )}
+                                </div>
                             ) : (
                                 <Button text leftIcon={<FontAwesomeIcon icon={faEdit} />} onClick={() => setModalShow(true)}>
                                     Edit profile
@@ -87,7 +168,7 @@ function Profile() {
                     </div>
                     <h3 className={cx('info')}>
                         <div className={cx('mr')}>
-                            <strong className={cx('number')}>{user.following}</strong> <span className={cx('des')}>Following</span>
+                            <strong className={cx('number')}>{user.following?.length}</strong> <span className={cx('des')}>Following</span>
                         </div>
                         <div className={cx('mr')}>
                             <strong className={cx('number')}>{user.followers}</strong> <span className={cx('des')}>Followers</span>
@@ -107,7 +188,13 @@ function Profile() {
                         <div className={cx('video-contain')}>
                             <div className={cx('video-list')}>
                                 {videoList?.map((video) => (
-                                    <VideoItem key={video.video_id} video={video} deleteVideo={deleteVideo} />
+                                    <VideoItem
+                                        key={video.video_id}
+                                        video={video}
+                                        deleteVideo={deleteVideo}
+                                        // nếu khong phải người đang đăng nhập thì khong thể hiện nút xóa
+                                        user={user}
+                                    />
                                 ))}
                             </div>
                         </div>

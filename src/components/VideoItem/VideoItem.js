@@ -1,10 +1,12 @@
 import classNames from 'classnames/bind';
 import styles from './VideoItem.module.scss';
 import { PlayVideo } from '~/components/Icons';
+import { UserAuth } from '../AuthContext/AuthContext';
 
 const cx = classNames.bind(styles);
 
-function VideoItem({ video, deleteVideo }) {
+function VideoItem({ video, deleteVideo, user }) {
+    const { userInfo } = UserAuth();
     const handleVideoPlay = (e) => {
         e.target.play();
     };
@@ -23,7 +25,7 @@ function VideoItem({ video, deleteVideo }) {
             <div className={cx('video-des')}>
                 <p>{video.des}</p>
             </div>
-            <button onClick={() => deleteVideo(video.video_id)}>delete</button>
+            {userInfo.username == user.username ? <button onClick={() => deleteVideo(video.video_id)}>delete</button> : <></>}
         </div>
     );
 }
