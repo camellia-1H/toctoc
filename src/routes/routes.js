@@ -11,6 +11,7 @@ import Profile from '~/pages/Profile';
 import Upload from '~/pages/Upload';
 import Live from '~/pages/Live';
 import SignUp from '~/pages/SignUp';
+import MessagesPage from '~/pages/MessagesPage';
 
 // Public routes
 const publicRoutes = [
@@ -20,6 +21,7 @@ const publicRoutes = [
     { path: config.routes.profile, component: Profile },
     { path: config.routes.upload, component: Upload, layout: HeaderOnly },
     { path: config.routes.signup, component: SignUp, layout: SignEaP },
+    { path: config.routes.messages, component: MessagesPage, layout: HeaderOnly },
 ];
 
 const privateRoutes = [];

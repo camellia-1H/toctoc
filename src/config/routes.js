@@ -8,4 +8,5 @@ export const routes = {
     search: '/search',
     live: '/live',
     signup: '/signup',
+    messages: '/messages',
 };

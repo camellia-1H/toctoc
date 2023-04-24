@@ -1,0 +1,15 @@
+.container {
+    height: 80vh;
+    width: var(--default-layout-width);
+    max-width: 100%;
+    padding: 0 var(--default-layout-horizontal-spacer);
+    margin: auto;
+    margin-top: 100px;
+    display: flex;
+    background-color: transparent;
+}
+
+.content {
+    flex: 1;
+    height: 100%;
+}

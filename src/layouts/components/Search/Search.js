@@ -9,6 +9,8 @@ import { Wrapper as PopperWrapper } from '~/components/Popper';
 import AccountItem from '~/components/AccountItem';
 import { SearchIcon } from '~/components/Icons';
 import { useDebounce } from '~/hooks';
+import { collection, query, where, getDocs, getDoc, setDoc, updateDoc, doc } from 'firebase/firestore';
+import { db } from '~/components/AuthContext/firebase';
 import styles from './Search.module.scss';
 
 const cx = classNames.bind(styles);
@@ -29,16 +31,34 @@ function Search() {
             return;
         }
 
-        const fetchApi = async () => {
+        const ngu = async () => {
+            const resultRef = [];
             setLoading(true);
-
-            const result = await searchServices.search(debouncedValue);
-
-            setSearchResult(result);
+            console.log(typeof debouncedValue);
+            const userRef = query(collection(db, 'user_video'), where('username', '==', debouncedValue));
+            // const q = query(collection(db, 'user_vieo'), where('username', '==', debouncedValue));
+            const querySnapshot = await getDocs(userRef);
+            querySnapshot.forEach((doc) => {
+                console.log(doc.data());
+                resultRef.push(doc.data());
+            });
+            console.log(resultRef);
+            setSearchResult(resultRef);
             setLoading(false);
         };
 
-        fetchApi();
+        ngu();
+
+        // const fetchApi = async () => {
+        //     setLoading(true);
+
+        //     const result = await searchServices.search(debouncedValue);
+
+        //     setSearchResult(result);
+        //     setLoading(false);
+        // };
+
+        // fetchApi();
     }, [debouncedValue]);
 
     const handleClear = () => {
@@ -70,13 +90,12 @@ function Search() {
                         <PopperWrapper>
                             <h4 className={cx('search-title')}>Accounts</h4>
                             {searchResult.map((result) => (
-                                <AccountItem key={result.user.id} data={result.user} />
+                                <AccountItem key={result.user_id} data={result} />
                             ))}
                         </PopperWrapper>
                     </div>
                 )}
-                onClickOutside={handleHideResult}
-            >
+                onClickOutside={handleHideResult}>
                 <div className={cx('search')}>
                     <input
                         ref={inputRef}

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { collection, query, where, getDocs, getDoc, updateDoc, doc } from 'firebase/firestore';
+import { useParams, useNavigate } from 'react-router-dom';
+import { collection, query, where, getDocs, getDoc, setDoc, updateDoc, doc } from 'firebase/firestore';
 import { db } from '~/components/AuthContext/firebase';
 import classNames from 'classnames/bind';
 
@@ -15,9 +15,7 @@ import { UserAuth } from '~/components/AuthContext/AuthContext';
 const cx = classNames.bind(styles);
 
 function Profile() {
-    // const params = useParams();
-    // console.log(params?.username);
-    // return <AccountProfile />;
+    const navigate = useNavigate();
     const { userInfo } = UserAuth();
     // người đang đăng nhập
 
@@ -131,6 +129,29 @@ function Profile() {
         }
     };
 
+    const handleMessages = async () => {
+        const messRef = doc(db, 'userChats', userInfo.username);
+        const chatRef = doc(db, 'chats', `${userInfo.username}${user.username}`);
+
+        const docSnap = await getDoc(messRef);
+        if (docSnap.exists()) {
+            navigate('/messages');
+        } else {
+            setDoc(messRef, {
+                date: new Date(),
+                userChats: {
+                    avatar: user.avatar,
+                    user_id: user.user_id,
+                    username: user.username,
+                },
+            });
+            setDoc(chatRef, {
+                messages: [],
+            });
+            navigate('/messages');
+        }
+    };
+
     return (
         <>
             <div className={cx('wrapper')}>
@@ -147,7 +168,9 @@ function Profile() {
                                 <div className={cx('button-container')}>
                                     {isFollow ? (
                                         <>
-                                            <Button outline>Messages</Button>
+                                            <Button outline onClick={handleMessages}>
+                                                Messages
+                                            </Button>
                                             <Button onClick={handleUnFollow} primary>
                                                 Unfollow
                                             </Button>
