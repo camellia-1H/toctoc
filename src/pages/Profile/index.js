@@ -101,10 +101,9 @@ function Profile() {
             console.log(index);
             console.log(userInfo.following);
 
-            // phải cộng thêm 1 xóa mới chuẩn index cần xóa
-
             if (index > -1) {
-                const result = userInfo.following.splice(index + 1, 1);
+                const result = userInfo.following;
+                result.splice(index, 1);
                 console.log(result);
 
                 await updateDoc(followingRef, {
