@@ -15,6 +15,7 @@ function Button({
     disabled = false,
     small = false,
     large = false,
+    smaller = false,
     children,
     className,
     leftIcon,
@@ -54,6 +55,7 @@ function Button({
         rounded,
         small,
         large,
+        smaller,
     });
 
     return (
@@ -74,6 +76,7 @@ Button.propTypes = {
     rounded: PropTypes.bool,
     disabled: PropTypes.bool,
     small: PropTypes.bool,
+    smaller: PropTypes.bool,
     large: PropTypes.bool,
     children: PropTypes.node.isRequired,
     className: PropTypes.string,

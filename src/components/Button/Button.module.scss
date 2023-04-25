@@ -86,3 +86,11 @@
     padding: 16px 100px;
     min-width: 140px;
 }
+.smaller {
+    min-width: 36px;
+    padding: 4px 10px;
+
+    span {
+        display: inherit;
+    }
+}

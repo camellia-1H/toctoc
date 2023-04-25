@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { doc, onSnapshot } from 'firebase/firestore';
+import { doc, onSnapshot, query, where, collection, getDocs } from 'firebase/firestore';
 import { db } from '~/components/AuthContext/firebase';
 import { UserAuth } from '~/components/AuthContext/AuthContext';
 import { UserChat } from '../ChatContext/ChatContext';
@@ -31,7 +31,7 @@ function SidebarMes() {
         <div className={cx('sidebar')}>
             <div className={cx('user-info')}>
                 <img className={cx('avatar')} src={userInfo?.avatar} alt="mg" />
-                <h2 style={{ margin: '0 30px' }}>Messages</h2>
+                <h2 style={{ margin: '0 20px' }}>Messages</h2>
             </div>
             <div className={cx('chat-lists')}>
                 {Object.entries(chatList)
@@ -41,8 +41,7 @@ function SidebarMes() {
                             <img className={cx('avatar')} src={chat[1].userData.avatar} alt="mg" />
                             <div className={cx('info')}>
                                 <h4 style={{ fontWeight: '600' }}>{chat[1].userData.username}</h4>
-                                <p style={{ color: 'gray', fontSize: '13px' }}>aga</p>
-                                {/* {chat[1].date.toDate().toString()} */}
+                                <p style={{ color: 'gray', fontSize: '13px' }}>{chat[1]?.lastMessage}</p>
                             </div>
                         </div>
                     ))}

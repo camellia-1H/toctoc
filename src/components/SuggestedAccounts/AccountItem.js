@@ -31,10 +31,10 @@ function AccountItem() {
                     />
                     <div className={cx('item-info')}>
                         <p className={cx('nickname')}>
-                            <strong>mahchagn</strong>
+                            <strong>useeer</strong>
                             <FontAwesomeIcon className={cx('check')} icon={faCheckCircle} />
                         </p>
-                        <p className={cx('name')}>Dnc</p>
+                        <p className={cx('name')}>fdsf</p>
                     </div>
                 </div>
             </Tippy>

@@ -131,28 +131,22 @@ function Profile() {
 
     const handleMessages = async () => {
         const messRef = doc(db, 'userChats', userInfo.username);
-        const messRef2 = doc(db, 'userChats', user.username);
         const combineId = userInfo.username > user.username ? userInfo.username + user.username : user.username + userInfo.username;
         const chatRef = doc(db, 'chats', combineId);
         const docSnap = await getDoc(messRef);
-        const docSnap2 = await getDoc(messRef2);
         const docSnapChat = await getDoc(chatRef);
+
         if (docSnap.exists()) {
-            if (docSnap2.exists()) {
-                navigate('/messages');
-            } else {
-                await setDoc(doc(db, 'userChats', user.username), {
-                    [combineId]: {
-                        userData: {
-                            avatar: userInfo.avatar,
-                            user_id: userInfo.user_id,
-                            username: userInfo.username,
-                            nickname: userInfo.nickname,
-                        },
-                        date: serverTimestamp(),
-                    },
-                });
-            }
+            await updateDoc(doc(db, 'userChats', userInfo.username), {
+                [combineId + '.userData']: {
+                    avatar: user.avatar,
+                    user_id: user.user_id,
+                    username: user.username,
+                    nickname: user.nickname,
+                },
+                [combineId + '.date']: serverTimestamp(),
+            });
+            navigate('/messages');
         } else {
             await setDoc(doc(db, 'userChats', userInfo.username), {
                 [combineId]: {
@@ -165,6 +159,7 @@ function Profile() {
                     date: serverTimestamp(),
                 },
             });
+            // navigate('/messages');
         }
         if (docSnapChat.exists()) {
             navigate('/messages');
@@ -172,8 +167,8 @@ function Profile() {
             await setDoc(chatRef, {
                 messages: [],
             });
-            navigate('/messages');
         }
+        navigate('/messages');
     };
 
     return (

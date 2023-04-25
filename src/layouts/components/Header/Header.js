@@ -1,7 +1,17 @@
 import classNames from 'classnames/bind';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleQuestion, faCoins, faEarthAsia, faEllipsisVertical, faGear, faKeyboard, faSignOut, faUser } from '@fortawesome/free-solid-svg-icons';
-import { Link } from 'react-router-dom';
+import {
+    faCircleQuestion,
+    faCoins,
+    faEarthAsia,
+    faEllipsisVertical,
+    faGear,
+    faKeyboard,
+    faMessage,
+    faSignOut,
+    faUser,
+} from '@fortawesome/free-solid-svg-icons';
+import { Link, NavLink } from 'react-router-dom';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
 
@@ -10,7 +20,7 @@ import Button from '~/components/Button';
 import styles from './Header.module.scss';
 import images from '~/assets/images';
 import Menu from '~/components/Popper/Menu';
-import { InboxIcon, MessageIcon, MoreIcon } from '~/components/Icons';
+import { InboxIcon, MessageIcon, MoreIcon, MessageIconActive } from '~/components/Icons';
 import Image from '~/components/Image';
 import Search from '../Search';
 import { UserAuth } from '~/components/AuthContext/AuthContext';
@@ -115,21 +125,23 @@ function Header({ userIsLogin, handleShowModal }) {
                 <div className={cx('actions')}>
                     {userIsLogin ? (
                         <>
-                            <Tippy delay={[0, 50]} content="Upload video" placement="bottom">
-                                <Button
-                                    text
-                                    leftIcon={<MoreIcon />}
-                                    // to={'/signin'}
-                                    to={config.routes.upload}>
-                                    Upload
-                                </Button>
-                            </Tippy>
-                            <Tippy delay={[0, 50]} content="Message" placement="bottom">
-                                <button className={cx('action-btn')}>
+                            <Button
+                                text
+                                leftIcon={<MoreIcon />}
+                                // to={'/signin'}
+                                to={config.routes.upload}>
+                                Upload
+                            </Button>
+
+                            <NavLink className={(nav) => cx('menu-item', { active: nav.isActive })} to={config.routes.messages}>
+                                <span className={cx('icon')}>
                                     <MessageIcon />
-                                </button>
-                            </Tippy>
-                            <Tippy delay={[0, 50]} content="Inbox" placement="bottom">
+                                </span>
+                                <span className={cx('active-icon')}>
+                                    <MessageIconActive />
+                                </span>
+                            </NavLink>
+                            <Tippy delay={[0, 50]} content="zzz" placement="bottom">
                                 <button className={cx('action-btn')}>
                                     <InboxIcon />
                                     <span className={cx('badge')}>12</span>

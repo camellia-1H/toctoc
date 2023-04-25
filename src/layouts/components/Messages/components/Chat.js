@@ -56,6 +56,7 @@ function Chat() {
         }
         await updateDoc(doc(db, 'userChats', userInfo.username), {
             [data.chatId]: {
+                lastMessage: text,
                 date: serverTimestamp(),
                 userData: data.userData,
             },
