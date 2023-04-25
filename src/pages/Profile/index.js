@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { collection, query, where, getDocs, getDoc, setDoc, updateDoc, doc } from 'firebase/firestore';
+import { collection, query, where, getDocs, getDoc, setDoc, updateDoc, doc, serverTimestamp } from 'firebase/firestore';
 import { db } from '~/components/AuthContext/firebase';
 import classNames from 'classnames/bind';
 
@@ -131,21 +131,45 @@ function Profile() {
 
     const handleMessages = async () => {
         const messRef = doc(db, 'userChats', userInfo.username);
-        const chatRef = doc(db, 'chats', `${userInfo.username}${user.username}`);
-
+        const messRef2 = doc(db, 'userChats', user.username);
+        const combineId = userInfo.username > user.username ? userInfo.username + user.username : user.username + userInfo.username;
+        const chatRef = doc(db, 'chats', combineId);
         const docSnap = await getDoc(messRef);
+        const docSnap2 = await getDoc(messRef2);
+        const docSnapChat = await getDoc(chatRef);
         if (docSnap.exists()) {
-            navigate('/messages');
+            if (docSnap2.exists()) {
+                navigate('/messages');
+            } else {
+                await setDoc(doc(db, 'userChats', user.username), {
+                    [combineId]: {
+                        userData: {
+                            avatar: userInfo.avatar,
+                            user_id: userInfo.user_id,
+                            username: userInfo.username,
+                            nickname: userInfo.nickname,
+                        },
+                        date: serverTimestamp(),
+                    },
+                });
+            }
         } else {
-            setDoc(messRef, {
-                date: new Date(),
-                userChats: {
-                    avatar: user.avatar,
-                    user_id: user.user_id,
-                    username: user.username,
+            await setDoc(doc(db, 'userChats', userInfo.username), {
+                [combineId]: {
+                    userData: {
+                        avatar: user.avatar,
+                        user_id: user.user_id,
+                        username: user.username,
+                        nickname: user.nickname,
+                    },
+                    date: serverTimestamp(),
                 },
             });
-            setDoc(chatRef, {
+        }
+        if (docSnapChat.exists()) {
+            navigate('/messages');
+        } else {
+            await setDoc(chatRef, {
                 messages: [],
             });
             navigate('/messages');

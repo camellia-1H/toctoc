@@ -1,152 +1,51 @@
+import { useEffect, useState } from 'react';
+import { doc, onSnapshot } from 'firebase/firestore';
+import { db } from '~/components/AuthContext/firebase';
+import { UserAuth } from '~/components/AuthContext/AuthContext';
+import { UserChat } from '../ChatContext/ChatContext';
+
 import classNames from 'classnames/bind';
 import styles from '../Messages.module.scss';
-
 const cx = classNames.bind(styles);
 
 function SidebarMes() {
+    const { userInfo } = UserAuth();
+    const { dispatch } = UserChat();
+    const [chatList, setChatList] = useState([]);
+
+    useEffect(() => {
+        const ngu = onSnapshot(doc(db, 'userChats', userInfo.username), (doc) => {
+            setChatList(doc.data());
+        });
+        return () => ngu();
+    }, [userInfo.username]);
+
+    const handleSelect = (userData) => {
+        dispatch({ type: 'CHANGE_USER', payload: userData });
+    };
+
+    // Object.entries(chatList).map((chat) => console.log(chat[1].date.toDate().toString()));
+    console.log(chatList);
+
     return (
         <div className={cx('sidebar')}>
             <div className={cx('user-info')}>
-                <img
-                    className={cx('avatar')}
-                    src="https://p16-sign-va.tiktokcdn.com/tos-useast2a-avt-0068-giso/172802b706443f4e7e063832a00d62be~c5_100x100.jpeg?x-expires=1682474400&x-signature=416rTGUZ9Z%2Bi3t07XSR8lFlz%2BHY%3D"
-                    alt="mg"
-                />
+                <img className={cx('avatar')} src={userInfo?.avatar} alt="mg" />
                 <h2 style={{ margin: '0 30px' }}>Messages</h2>
             </div>
             <div className={cx('chat-lists')}>
-                <div className={cx('chat-item')}>
-                    <img
-                        className={cx('avatar')}
-                        src="https://p16-sign-va.tiktokcdn.com/tos-useast2a-avt-0068-giso/172802b706443f4e7e063832a00d62be~c5_100x100.jpeg?x-expires=1682474400&x-signature=416rTGUZ9Z%2Bi3t07XSR8lFlz%2BHY%3D"
-                        alt="mg"
-                    />
-                    <div className={cx('info')}>
-                        <h4 style={{ fontWeight: '600' }}>thuyf duong</h4>
-                        <p style={{ color: 'gray', fontSize: '13px' }}>9:03 AM</p>
-                    </div>
-                </div>
-                <div className={cx('chat-item')}>
-                    <img
-                        className={cx('avatar')}
-                        src="https://p16-sign-va.tiktokcdn.com/tos-useast2a-avt-0068-giso/172802b706443f4e7e063832a00d62be~c5_100x100.jpeg?x-expires=1682474400&x-signature=416rTGUZ9Z%2Bi3t07XSR8lFlz%2BHY%3D"
-                        alt="mg"
-                    />
-                    <div className={cx('info')}>
-                        <h4 style={{ fontWeight: '600' }}>thuyf duong</h4>
-                        <p style={{ color: 'gray', fontSize: '13px' }}>9:03 AM</p>
-                    </div>
-                </div>
-                <div className={cx('chat-item')}>
-                    <img
-                        className={cx('avatar')}
-                        src="https://p16-sign-va.tiktokcdn.com/tos-useast2a-avt-0068-giso/172802b706443f4e7e063832a00d62be~c5_100x100.jpeg?x-expires=1682474400&x-signature=416rTGUZ9Z%2Bi3t07XSR8lFlz%2BHY%3D"
-                        alt="mg"
-                    />
-                    <div className={cx('info')}>
-                        <h4 style={{ fontWeight: '600' }}>thuyf duong</h4>
-                        <p style={{ color: 'gray', fontSize: '13px' }}>9:03 AM</p>
-                    </div>
-                </div>
-                <div className={cx('chat-item')}>
-                    <img
-                        className={cx('avatar')}
-                        src="https://p16-sign-va.tiktokcdn.com/tos-useast2a-avt-0068-giso/172802b706443f4e7e063832a00d62be~c5_100x100.jpeg?x-expires=1682474400&x-signature=416rTGUZ9Z%2Bi3t07XSR8lFlz%2BHY%3D"
-                        alt="mg"
-                    />
-                    <div className={cx('info')}>
-                        <h4 style={{ fontWeight: '600' }}>thuyf duong</h4>
-                        <p style={{ color: 'gray', fontSize: '13px' }}>9:03 AM</p>
-                    </div>
-                </div>
-                <div className={cx('chat-item')}>
-                    <img
-                        className={cx('avatar')}
-                        src="https://p16-sign-va.tiktokcdn.com/tos-useast2a-avt-0068-giso/172802b706443f4e7e063832a00d62be~c5_100x100.jpeg?x-expires=1682474400&x-signature=416rTGUZ9Z%2Bi3t07XSR8lFlz%2BHY%3D"
-                        alt="mg"
-                    />
-                    <div className={cx('info')}>
-                        <h4 style={{ fontWeight: '600' }}>thuyf duong</h4>
-                        <p style={{ color: 'gray', fontSize: '13px' }}>9:03 AM</p>
-                    </div>
-                </div>
-                <div className={cx('chat-item')}>
-                    <img
-                        className={cx('avatar')}
-                        src="https://p16-sign-va.tiktokcdn.com/tos-useast2a-avt-0068-giso/172802b706443f4e7e063832a00d62be~c5_100x100.jpeg?x-expires=1682474400&x-signature=416rTGUZ9Z%2Bi3t07XSR8lFlz%2BHY%3D"
-                        alt="mg"
-                    />
-                    <div className={cx('info')}>
-                        <h4 style={{ fontWeight: '600' }}>thuyf duong</h4>
-                        <p style={{ color: 'gray', fontSize: '13px' }}>9:03 AM</p>
-                    </div>
-                </div>
-                <div className={cx('chat-item')}>
-                    <img
-                        className={cx('avatar')}
-                        src="https://p16-sign-va.tiktokcdn.com/tos-useast2a-avt-0068-giso/172802b706443f4e7e063832a00d62be~c5_100x100.jpeg?x-expires=1682474400&x-signature=416rTGUZ9Z%2Bi3t07XSR8lFlz%2BHY%3D"
-                        alt="mg"
-                    />
-                    <div className={cx('info')}>
-                        <h4 style={{ fontWeight: '600' }}>thuyf duong</h4>
-                        <p style={{ color: 'gray', fontSize: '13px' }}>9:03 AM</p>
-                    </div>
-                </div>
-                <div className={cx('chat-item')}>
-                    <img
-                        className={cx('avatar')}
-                        src="https://p16-sign-va.tiktokcdn.com/tos-useast2a-avt-0068-giso/172802b706443f4e7e063832a00d62be~c5_100x100.jpeg?x-expires=1682474400&x-signature=416rTGUZ9Z%2Bi3t07XSR8lFlz%2BHY%3D"
-                        alt="mg"
-                    />
-                    <div className={cx('info')}>
-                        <h4 style={{ fontWeight: '600' }}>thuyf duong</h4>
-                        <p style={{ color: 'gray', fontSize: '13px' }}>9:03 AM</p>
-                    </div>
-                </div>
-                <div className={cx('chat-item')}>
-                    <img
-                        className={cx('avatar')}
-                        src="https://p16-sign-va.tiktokcdn.com/tos-useast2a-avt-0068-giso/172802b706443f4e7e063832a00d62be~c5_100x100.jpeg?x-expires=1682474400&x-signature=416rTGUZ9Z%2Bi3t07XSR8lFlz%2BHY%3D"
-                        alt="mg"
-                    />
-                    <div className={cx('info')}>
-                        <h4 style={{ fontWeight: '600' }}>thuyf duong</h4>
-                        <p style={{ color: 'gray', fontSize: '13px' }}>9:03 AM</p>
-                    </div>
-                </div>
-                <div className={cx('chat-item')}>
-                    <img
-                        className={cx('avatar')}
-                        src="https://p16-sign-va.tiktokcdn.com/tos-useast2a-avt-0068-giso/172802b706443f4e7e063832a00d62be~c5_100x100.jpeg?x-expires=1682474400&x-signature=416rTGUZ9Z%2Bi3t07XSR8lFlz%2BHY%3D"
-                        alt="mg"
-                    />
-                    <div className={cx('info')}>
-                        <h4 style={{ fontWeight: '600' }}>thuyf duong</h4>
-                        <p style={{ color: 'gray', fontSize: '13px' }}>9:03 AM</p>
-                    </div>
-                </div>
-                <div className={cx('chat-item')}>
-                    <img
-                        className={cx('avatar')}
-                        src="https://p16-sign-va.tiktokcdn.com/tos-useast2a-avt-0068-giso/172802b706443f4e7e063832a00d62be~c5_100x100.jpeg?x-expires=1682474400&x-signature=416rTGUZ9Z%2Bi3t07XSR8lFlz%2BHY%3D"
-                        alt="mg"
-                    />
-                    <div className={cx('info')}>
-                        <h4 style={{ fontWeight: '600' }}>thuyf duong</h4>
-                        <p style={{ color: 'gray', fontSize: '13px' }}>9:03 AM</p>
-                    </div>
-                </div>
-                <div className={cx('chat-item')}>
-                    <img
-                        className={cx('avatar')}
-                        src="https://p16-sign-va.tiktokcdn.com/tos-useast2a-avt-0068-giso/172802b706443f4e7e063832a00d62be~c5_100x100.jpeg?x-expires=1682474400&x-signature=416rTGUZ9Z%2Bi3t07XSR8lFlz%2BHY%3D"
-                        alt="mg"
-                    />
-                    <div className={cx('info')}>
-                        <h4 style={{ fontWeight: '600' }}>thuyf duong</h4>
-                        <p style={{ color: 'gray', fontSize: '13px' }}>9:03 AM</p>
-                    </div>
-                </div>
+                {Object.entries(chatList)
+                    ?.sort((a, b) => b[1].date - a[1].date)
+                    .map((chat) => (
+                        <div key={chat[0]} className={cx('chat-item')} onClick={() => handleSelect(chat[1].userData)}>
+                            <img className={cx('avatar')} src={chat[1].userData.avatar} alt="mg" />
+                            <div className={cx('info')}>
+                                <h4 style={{ fontWeight: '600' }}>{chat[1].userData.username}</h4>
+                                <p style={{ color: 'gray', fontSize: '13px' }}>aga</p>
+                                {/* {chat[1].date.toDate().toString()} */}
+                            </div>
+                        </div>
+                    ))}
             </div>
         </div>
     );
