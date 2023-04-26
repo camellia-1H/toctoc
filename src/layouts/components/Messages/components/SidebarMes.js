@@ -10,7 +10,7 @@ const cx = classNames.bind(styles);
 
 function SidebarMes() {
     const { userInfo } = UserAuth();
-    const { dispatch } = UserChat();
+    const { dispatch, userFollow } = UserChat();
     const [chatList, setChatList] = useState([]);
 
     useEffect(() => {

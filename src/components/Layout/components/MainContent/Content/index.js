@@ -102,9 +102,9 @@ function Content({ data }) {
     return (
         <div className={cx('container')}>
             <Avatar data={data} />
-            <Button small outline className={cx('btn')}>
+            {/* <Button small outline className={cx('btn')}>
                 Follow
-            </Button>
+            </Button> */}
             <VideoContent data={data} />
         </div>
     );

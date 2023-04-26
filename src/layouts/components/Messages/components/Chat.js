@@ -16,10 +16,11 @@ const cx = classNames.bind(styles);
 
 function Chat() {
     const { userInfo } = UserAuth();
-    const { data } = UserChat();
+    const { data, userFollow } = UserChat();
     const [messages, setMessages] = useState([]);
     const [text, setText] = useState('');
     const [file, setFile] = useState(null);
+    const [notSend, setNotSend] = useState(false);
 
     const handleSend = async () => {
         if (file) {
@@ -71,6 +72,13 @@ function Chat() {
         const ngu = onSnapshot(doc(db, 'chats', data.chatId), (doc) => {
             console.log(doc.data());
             doc.exists() && setMessages(doc.data().messages);
+            if (doc.exists()) {
+                if (userFollow) {
+                    setNotSend(false);
+                } else {
+                    setNotSend(true);
+                }
+            }
         });
         return () => ngu();
     }, [data.chatId]);
@@ -80,7 +88,7 @@ function Chat() {
         <div className={cx('chat-container')}>
             <div>
                 <div className={cx('chat-item')}>
-                    <img className={cx('avatar')} src={data.userData.avatar} alt="mg" />
+                    <img className={cx('avatar')} src={data.userData.avatar} />
                     <div className={cx('info')}>
                         <h4 style={{ fontWeight: '600', fontSize: '18px' }}>{data?.userData.username}</h4>
                         <p style={{ color: 'gray', fontSize: '14px' }}>{data?.userData.nickname}</p>
@@ -89,6 +97,7 @@ function Chat() {
             </div>
             <div style={{ padding: '10px', overflow: 'hidden' }}>
                 <div style={{ height: '420px', overflowY: 'auto' }}>
+                    {notSend && <div>Hiện khong thể nhắn tin do chưa follow nhau</div>}
                     {messages.map((message) => (
                         <MessageContent key={uuid()} message={message} />
                     ))}
@@ -98,6 +107,7 @@ function Chat() {
             <div className={cx('input')}>
                 <input
                     className={cx('input-text')}
+                    disabled={notSend ? true : false}
                     value={text}
                     type="text"
                     placeholder="type message...."

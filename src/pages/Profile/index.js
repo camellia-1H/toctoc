@@ -89,16 +89,26 @@ function Profile() {
         ngu();
     }, [username, isFollow, userInfo.following?.length]);
 
-    // Lỗi unfollow, follow
-
     const handleUnFollow = async () => {
         const followingRef = doc(db, 'user_video', `${userInfo?.user_id}`);
-        console.log(followingRef);
-        if (isFollow) {
-            const index = userInfo.following.indexOf(username);
-            console.log(index);
-            console.log(userInfo.following);
+        const followerRef = doc(db, 'user_video', `${user?.user_id}`);
 
+        if (isFollow) {
+            const indexFollower = user.followers.indexOf(userInfo.username);
+            // số lượt follower
+            if (indexFollower > -1) {
+                const resultFollower = user.followers;
+                resultFollower.splice(indexFollower, 1);
+                console.log(resultFollower);
+
+                await updateDoc(followerRef, {
+                    followers: resultFollower,
+                });
+                setFollow(false);
+            }
+
+            const index = userInfo.following.indexOf(username);
+            // số lượt following
             if (index > -1) {
                 const result = userInfo.following;
                 result.splice(index, 1);
@@ -110,12 +120,13 @@ function Profile() {
 
                 setFollow(false);
             }
-        } else {
         }
     };
 
     const handleFollow = async () => {
         const followingRef = doc(db, 'user_video', `${userInfo?.user_id}`);
+        const followerRef = doc(db, 'user_video', `${user?.user_id}`);
+
         if (isFollow == false) {
             userInfo.following.push(user.username); // push trả về length
             const result = userInfo.following;
@@ -127,6 +138,13 @@ function Profile() {
 
             setFollow(true);
         }
+        user.followers.push(userInfo.username); // push trả về length
+        const resultFollower = user.followers;
+        console.log(resultFollower);
+
+        await updateDoc(followerRef, {
+            followers: resultFollower,
+        });
     };
 
     const handleMessages = async () => {
@@ -146,7 +164,11 @@ function Profile() {
                 },
                 [combineId + '.date']: serverTimestamp(),
             });
-            navigate('/messages');
+            navigate('/messages', {
+                state: {
+                    follow: userInfo.following.indexOf(user.username) > -1 && user.following.indexOf(userInfo.username) > -1 ? true : false,
+                },
+            });
         } else {
             await setDoc(doc(db, 'userChats', userInfo.username), {
                 [combineId]: {
@@ -162,13 +184,21 @@ function Profile() {
             // navigate('/messages');
         }
         if (docSnapChat.exists()) {
-            navigate('/messages');
+            navigate('/messages', {
+                state: {
+                    follow: userInfo.following.indexOf(user.username) > -1 && user.following.indexOf(userInfo.username) > -1 ? true : false,
+                },
+            });
         } else {
             await setDoc(chatRef, {
                 messages: [],
             });
         }
-        navigate('/messages');
+        navigate('/messages', {
+            state: {
+                follow: userInfo.following.indexOf(user.username) > -1 && user.following.indexOf(userInfo.username) > -1 ? true : false,
+            },
+        });
     };
 
     return (
@@ -212,7 +242,7 @@ function Profile() {
                             <strong className={cx('number')}>{user.following?.length}</strong> <span className={cx('des')}>Following</span>
                         </div>
                         <div className={cx('mr')}>
-                            <strong className={cx('number')}>{user.followers}</strong> <span className={cx('des')}>Followers</span>
+                            <strong className={cx('number')}>{user.followers?.length}</strong> <span className={cx('des')}>Followers</span>
                         </div>
                         <div className={cx('mr')}>
                             <strong className={cx('number')}>{user.like}</strong> <span className={cx('des')}>Likes</span>

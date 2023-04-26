@@ -3,7 +3,8 @@ import { UserAuth } from '~/components/AuthContext/AuthContext';
 
 const ChatContext = createContext();
 
-export const ChatContextProvider = ({ children }) => {
+export const ChatContextProvider = ({ children, userFollow }) => {
+    console.log(userFollow);
     const { userInfo } = UserAuth();
     const INITIAL_STATE = {
         chatId: 'null',
@@ -20,6 +21,10 @@ export const ChatContextProvider = ({ children }) => {
                         userInfo.username > action.payload.username
                             ? userInfo.username + action.payload.username
                             : action.payload.username + userInfo.username,
+                    // userFollow:
+                    //     userInfo.following.indexOf(action.payload.username) > -1 && action.payload.following.indexOf(userInfo.username) > -1
+                    //         ? true
+                    //         : false,
                 };
 
             default:
@@ -29,7 +34,7 @@ export const ChatContextProvider = ({ children }) => {
 
     const [state, dispatch] = useReducer(chatReducer, INITIAL_STATE);
 
-    return <ChatContext.Provider value={{ data: state, dispatch }}>{children}</ChatContext.Provider>;
+    return <ChatContext.Provider value={{ data: state, dispatch, userFollow }}>{children}</ChatContext.Provider>;
 };
 export const UserChat = () => {
     return useContext(ChatContext);

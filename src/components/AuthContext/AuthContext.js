@@ -26,7 +26,7 @@ export const AuthContextProvider = ({ children }) => {
                 setDoc(doc(db, 'user_video', data.user?.email), {
                     user_id: data.user.email,
                     bio: 'No bio yet',
-                    followers: 0,
+                    followers: [],
                     following: [],
                     like: 0,
                     nickname: `userGG${Math.floor(Math.random() * 9000) + 1000}`,
@@ -58,7 +58,7 @@ export const AuthContextProvider = ({ children }) => {
         setDoc(doc(db, 'user_video', email), {
             user_id: user?.email ? user?.email : email,
             bio: 'No bio yet',
-            followers: 0,
+            followers: [],
             following: [],
             like: 0,
             nickname: `user${Math.floor(Math.random() * 9000) + 1000}`,
