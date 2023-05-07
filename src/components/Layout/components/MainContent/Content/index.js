@@ -1,12 +1,15 @@
+import { useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
 import { Link, useParams } from 'react-router-dom';
+import { doc, updateDoc } from 'firebase/firestore';
+import { storage, db } from '~/components/AuthContext/firebase';
 
 import styles from '../MainContent.module.scss';
 import Image from '~/components/Image';
-import Button from '~/components/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faComment, faHeart, faMusic, faShare } from '@fortawesome/free-solid-svg-icons';
 import { config } from '~/config';
+
 const cx = classNames.bind(styles);
 
 const Avatar = ({ data }) => {
@@ -33,6 +36,33 @@ const VideoContent = ({ data }) => {
         e.target.pause();
         e.target.currentTime = 0;
     };
+
+    const [isLike, setLike] = useState(false);
+    const [countLike, setCountLike] = useState(data.video[0].play_count);
+    console.log(countLike);
+
+    const handleLike = () => {
+        if (isLike) {
+            setLike(false);
+            setCountLike((preCount) => (preCount -= 1));
+        } else {
+            setLike(true);
+            setCountLike((preCount) => (preCount += 1));
+        }
+    };
+
+    useEffect(() => {
+        console.log(countLike);
+        console.log(data.user_id);
+        const ngu = async () => {
+            console.log('da goi');
+            await updateDoc(doc(db, 'user_video', data?.user_id), {
+                like: countLike,
+            });
+        };
+        ngu();
+    }, [countLike]);
+
     return (
         <div className={cx('video-wrapper')}>
             <div className={cx('des')}>
@@ -73,12 +103,13 @@ const VideoContent = ({ data }) => {
                         // autoPlay
                     ></video>
                 </div>
+
                 <div className={cx('list-icon')}>
-                    <button className={cx('btn-icon')}>
-                        <p className={cx('icon-con')}>
+                    <button className={cx('btn-icon')} onClick={handleLike}>
+                        <p className={isLike ? cx('icon-active') : cx('icon-con')}>
                             <FontAwesomeIcon icon={faHeart} className={cx('icon')} />
                         </p>
-                        <h3 className={cx('quantity')}>{data.video[0].play_count}</h3>
+                        <h3 className={cx('quantity')}>{countLike}</h3>
                     </button>
                     <button className={cx('btn-icon')}>
                         <p className={cx('icon-con')}>

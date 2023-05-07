@@ -2,7 +2,7 @@ import ReactModal from 'react-modal';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
-import { addDoc, arrayUnion, doc, setDoc, updateDoc } from 'firebase/firestore';
+import { doc, updateDoc } from 'firebase/firestore';
 import { storage, db } from '~/components/AuthContext/firebase';
 
 import classNames from 'classnames/bind';
