@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
 import { Link, useParams } from 'react-router-dom';
-import { doc, updateDoc } from 'firebase/firestore';
+import { doc, updateDoc, arrayUnion } from 'firebase/firestore';
 import { storage, db } from '~/components/AuthContext/firebase';
 
 import styles from '../MainContent.module.scss';
@@ -9,6 +9,7 @@ import Image from '~/components/Image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faComment, faHeart, faMusic, faShare } from '@fortawesome/free-solid-svg-icons';
 import { config } from '~/config';
+import { UserAuth } from '~/components/AuthContext/AuthContext';
 
 const cx = classNames.bind(styles);
 
@@ -28,6 +29,9 @@ const Avatar = ({ data }) => {
 };
 
 const VideoContent = ({ data }) => {
+    const { userInfo } = UserAuth();
+    // console.log(userInfo);
+
     const handleVideoPlay = (e) => {
         e.target.play();
     };
@@ -38,30 +42,62 @@ const VideoContent = ({ data }) => {
     };
 
     const [isLike, setLike] = useState(false);
-    const [countLike, setCountLike] = useState(data.video[0].play_count);
-    console.log(countLike);
+    // const [countLike, setCountLike] = useState(data.video[0].)
 
-    const handleLike = () => {
+    const handleLike = async () => {
+        const userRef = doc(db, 'user_video', userInfo?.user_id);
         if (isLike) {
-            setLike(false);
-            setCountLike((preCount) => (preCount -= 1));
+            let spliceIndex = -1;
+            userInfo.like.map(async (liked, index) => {
+                if (liked.video_id == data.video[0].video_id) {
+                    spliceIndex = index;
+                }
+            });
+            console.log(spliceIndex);
+
+            if (spliceIndex > -1) {
+                userInfo.like.splice(spliceIndex, 1);
+                await updateDoc(userRef, {
+                    like: userInfo.like,
+                });
+                console.log('eo lai nuwa');
+                setLike(false);
+            }
         } else {
+            await updateDoc(userRef, {
+                like: arrayUnion({
+                    video_id: data.video[0].video_id,
+                    play: data.video[0].play,
+                    cover: data.video[0].cover,
+                    play_count: data.video[0].play_count,
+                    des: data.video[0].des,
+                }),
+            });
             setLike(true);
-            setCountLike((preCount) => (preCount += 1));
+            console.log('da lai');
         }
     };
 
+    // const handleLike = () => {
+    //     if (isLike) {
+    //         setLike(false);
+    //         setCountLike((preCount) => (preCount -= 1));
+    //     } else {
+    //         setLike(true);
+    //         setCountLike((preCount) => (preCount += 1));
+    //     }
+    // };
+
     useEffect(() => {
-        console.log(countLike);
-        console.log(data.user_id);
+        console.log(data);
         const ngu = async () => {
             console.log('da goi');
             await updateDoc(doc(db, 'user_video', data?.user_id), {
-                like: countLike,
+                like: data.like,
             });
         };
         ngu();
-    }, [countLike]);
+    }, [data.like.length]);
 
     return (
         <div className={cx('video-wrapper')}>
@@ -109,7 +145,7 @@ const VideoContent = ({ data }) => {
                         <p className={isLike ? cx('icon-active') : cx('icon-con')}>
                             <FontAwesomeIcon icon={faHeart} className={cx('icon')} />
                         </p>
-                        <h3 className={cx('quantity')}>{countLike}</h3>
+                        <h3 className={cx('quantity')}>{data.like.length}</h3>
                     </button>
                     <button className={cx('btn-icon')}>
                         <p className={cx('icon-con')}>

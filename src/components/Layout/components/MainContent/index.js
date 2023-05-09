@@ -9,9 +9,8 @@ const cx = classNames.bind(styles);
 
 function MainContent() {
     // const [videoList, setVideoList] = useState([]);
-    const { videoList, user, userInfo } = UserAuth();
+    const { videoList, user } = UserAuth();
     console.log(videoList);
-    console.log(userInfo);
     // useEffect(() => {
     //     const fetchApi = async () => {
     //         const result = await videoPopularService.getVideoPopular();

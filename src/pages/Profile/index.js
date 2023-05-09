@@ -24,7 +24,12 @@ function Profile() {
     const [modalShow, setModalShow] = useState(false);
     const [user, setUser] = useState({});
     const [videoList, setVideoList] = useState([]);
+    const [videoLikes, setVideoLikes] = useState([]);
     const [isFollow, setFollow] = useState(false);
+
+    // profile hiện video đăng, đã like
+    const [isShow, setShow] = useState(true);
+
     // const [followingList, setFollowingList] = useState([]);
 
     console.log(username);
@@ -36,6 +41,7 @@ function Profile() {
             const ngu = () => {
                 setUser(userInfo);
                 setVideoList(userInfo.video);
+                setVideoLikes(userInfo.like);
             };
             ngu();
         } else {
@@ -245,29 +251,50 @@ function Profile() {
                             <strong className={cx('number')}>{user.followers?.length}</strong> <span className={cx('des')}>Followers</span>
                         </div>
                         <div className={cx('mr')}>
-                            <strong className={cx('number')}>{user.like}</strong> <span className={cx('des')}>Likes</span>
+                            <strong className={cx('number')}>{user.like?.length}</strong> <span className={cx('des')}>Likes</span>
                         </div>
                     </h3>
                     <h3 className={cx('nickname')}>{user.bio || 'No bio yet.'}</h3>
 
                     <div className={cx('user-layout')}>
                         <div className={cx('tag-contain')}>
-                            <p className={cx('tag', 'tag1')}>Videos</p>
-                            <p className={cx('tag', 'tag2')}>Liked</p>
-                            <div className={cx('w230')}></div>
+                            <p className={cx('tag', 'tag1')} onClick={() => setShow(true)}>
+                                Videos
+                            </p>
+                            <p className={cx('tag', 'tag2')} onClick={() => setShow(false)}>
+                                Liked
+                            </p>
+                            <div className={isShow ? cx('w230') : cx('w2302')}></div>
                         </div>
                         <div className={cx('video-contain')}>
-                            <div className={cx('video-list')}>
-                                {videoList?.map((video) => (
-                                    <VideoItem
-                                        key={video.video_id}
-                                        video={video}
-                                        deleteVideo={deleteVideo}
-                                        // nếu khong phải người đang đăng nhập thì khong thể hiện nút xóa
-                                        user={user}
-                                    />
-                                ))}
-                            </div>
+                            {/* hiện video mình đăng tải, và video của người khác đã like */}
+                            {isShow ? (
+                                <div className={cx('video-list')}>
+                                    {videoList?.map((video) => (
+                                        <VideoItem
+                                            key={video.video_id}
+                                            video={video}
+                                            deleteVideo={deleteVideo}
+                                            // nếu khong phải người đang đăng nhập thì khong thể hiện nút xóa video ở phần đã đăng
+                                            user={user}
+                                            isShow={isShow}
+                                        />
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className={cx('video-list')}>
+                                    {videoLikes?.map((video) => (
+                                        <VideoItem
+                                            key={video.video_id}
+                                            video={video}
+                                            deleteVideo={deleteVideo}
+                                            // nếu khong phải người đang đăng nhập thì khong thể hiện nút xóa
+                                            user={user}
+                                            isShow={isShow}
+                                        />
+                                    ))}
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>

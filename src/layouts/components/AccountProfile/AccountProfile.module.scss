@@ -4,9 +4,6 @@
     align-items: center;
 }
 
-.wrapper {
-}
-
 .user-page {
     padding: 24px 20px;
 }
@@ -65,10 +62,25 @@
     height: 40px;
     font-size: 18px;
     font-weight: 600;
+    cursor: pointer;
 }
 
 .tag2:hover + .w230 {
     transform: translateX(230px);
+}
+
+.tag1:hover ~ .w2302 {
+    transform: translateX(0);
+}
+
+.w2302 {
+    position: absolute;
+    top: 43px;
+    height: 2px;
+    width: 230px;
+    background-color: black;
+    transform: translateX(230px);
+    transition: transform 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
 }
 
 .w230 {

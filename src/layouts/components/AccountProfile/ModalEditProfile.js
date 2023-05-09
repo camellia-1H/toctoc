@@ -59,7 +59,7 @@ function ModalEditProfile({ modalIsOpen, handleCloseModal }) {
             bio: bio,
             followers: userInfo.followers,
             following: userInfo.following,
-            like: userInfo.followers,
+            like: userInfo.like,
             nickname: nickname,
             user_id: userInfo.user_id,
             username: username,

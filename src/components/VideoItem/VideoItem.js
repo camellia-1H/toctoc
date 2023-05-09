@@ -5,7 +5,8 @@ import { UserAuth } from '../AuthContext/AuthContext';
 
 const cx = classNames.bind(styles);
 
-function VideoItem({ video, deleteVideo, user }) {
+function VideoItem({ video, deleteVideo, user, isShow }) {
+    console.log(isShow);
     const { userInfo } = UserAuth();
     const handleVideoPlay = (e) => {
         e.target.play();
@@ -25,7 +26,7 @@ function VideoItem({ video, deleteVideo, user }) {
             <div className={cx('video-des')}>
                 <p>{video.des}</p>
             </div>
-            {userInfo.username == user.username ? <button onClick={() => deleteVideo(video.video_id)}>delete</button> : <></>}
+            {isShow && userInfo.username == user.username ? <button onClick={() => deleteVideo(video.video_id)}>delete</button> : <></>}
         </div>
     );
 }
