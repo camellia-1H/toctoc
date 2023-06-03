@@ -9,7 +9,7 @@ const cx = classNames.bind(styles);
 
 function MainContent() {
     // const [videoList, setVideoList] = useState([]);
-    const { videoList, user } = UserAuth();
+    const { videoList, user, userInfo } = UserAuth();
     console.log(videoList);
     // useEffect(() => {
     //     const fetchApi = async () => {

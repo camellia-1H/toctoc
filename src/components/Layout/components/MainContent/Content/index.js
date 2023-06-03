@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import classNames from 'classnames/bind';
 import { Link, useParams } from 'react-router-dom';
 import { doc, updateDoc, arrayUnion } from 'firebase/firestore';
@@ -31,7 +31,8 @@ const Avatar = ({ data }) => {
 const VideoContent = ({ data }) => {
     const { userInfo } = UserAuth();
     // console.log(userInfo);
-
+    const indexVideo = useRef(Math.floor(Math.random() * data.video.length)).current;
+    console.log(indexVideo);
     const handleVideoPlay = (e) => {
         e.target.play();
     };
@@ -48,8 +49,8 @@ const VideoContent = ({ data }) => {
         const userRef = doc(db, 'user_video', userInfo?.user_id);
         if (isLike) {
             let spliceIndex = -1;
-            userInfo.like.map(async (liked, index) => {
-                if (liked.video_id == data.video[0].video_id) {
+            userInfo.like.map((liked, index) => {
+                if (liked.video_id == data.video[indexVideo].video_id) {
                     spliceIndex = index;
                 }
             });
@@ -66,17 +67,19 @@ const VideoContent = ({ data }) => {
         } else {
             await updateDoc(userRef, {
                 like: arrayUnion({
-                    video_id: data.video[0].video_id,
-                    play: data.video[0].play,
-                    cover: data.video[0].cover,
-                    play_count: data.video[0].play_count,
-                    des: data.video[0].des,
+                    video_id: data.video[indexVideo].video_id,
+                    play: data.video[indexVideo].play,
+                    cover: data.video[indexVideo].cover,
+                    play_count: data.video[indexVideo].play_count,
+                    des: data.video[indexVideo].des,
                 }),
             });
             setLike(true);
             console.log('da lai');
         }
     };
+
+    console.log('fsadfdas');
 
     // const handleLike = () => {
     //     if (isLike) {
@@ -109,7 +112,7 @@ const VideoContent = ({ data }) => {
                     <span>2-11</span>
                 </Link>
                 <div className={cx('des-hastag')}>
-                    <span className={cx('descipt')}>{data.video.length > 0 ? data.video[0].des : ''}</span>
+                    <span className={cx('descipt')}>{data.video.length > 0 ? data.video[indexVideo].des : ''}</span>
                     <Link to="/upload" className={cx('hastag')}>
                         #ngu
                     </Link>
@@ -132,9 +135,9 @@ const VideoContent = ({ data }) => {
                         className={cx('video-moe')}
                         onMouseEnter={handleVideoPlay}
                         onMouseLeave={handleVideoPause}
-                        src={data.video[0].play}
+                        src={data.video[indexVideo].play}
                         loop
-                        poster={data.video[0].cover}
+                        poster={data.video[indexVideo].cover}
                         // controls
                         // autoPlay
                     ></video>
@@ -145,7 +148,7 @@ const VideoContent = ({ data }) => {
                         <p className={isLike ? cx('icon-active') : cx('icon-con')}>
                             <FontAwesomeIcon icon={faHeart} className={cx('icon')} />
                         </p>
-                        <h3 className={cx('quantity')}>{data.like.length}</h3>
+                        {/* <h3 className={cx('quantity')}>{data.like.length}</h3> */}
                     </button>
                     <button className={cx('btn-icon')}>
                         <p className={cx('icon-con')}>
